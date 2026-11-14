@@ -1,0 +1,16 @@
+# PostgreSQL cho môi trường giống production (PRD mục 5).
+# Dev nhanh không cần file này: backend mặc định dùng SQLite (backend/cinerec.db).
+services:
+  db:
+    image: postgres:16.6
+    environment:
+      POSTGRES_USER: cinerec
+      POSTGRES_PASSWORD: cinerec
+      POSTGRES_DB: cinerec
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

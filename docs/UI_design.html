@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CineRec — UI mock (IT4613)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e0f13; --bg2:#15171d; --card:#1b1e26; --line:#2a2e39;
+  --text:#ecedf1; --muted:#9298a6; --dim:#646a78;
+  --accent:#f5b544; --accent2:#ff6b4a; --good:#4cc38a; --bad:#ef5d5d; --info:#6aa8ff;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+input,select{font:inherit;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;outline:none}
+input:focus,select:focus{border-color:var(--accent)}
+a{color:inherit}
+
+/* mock switcher (designer chrome, not part of product) */
+.mockbar{position:sticky;top:0;z-index:50;background:#08090b;border-bottom:1px dashed #333;display:flex;gap:6px;align-items:center;padding:6px 16px;font-size:12px;color:var(--dim);overflow-x:auto}
+.mockbar b{color:var(--muted);margin-right:6px;white-space:nowrap}
+.mockbar button{padding:4px 10px;border-radius:999px;border:1px solid #2b2b2b;white-space:nowrap}
+.mockbar button.on{background:#222;color:var(--text);border-color:#444}
+body:not(.admin) .admin-only{display:none}
+
+/* app header */
+header.app{position:sticky;top:33px;z-index:40;background:rgba(14,15,19,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:28px;padding:12px 32px}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+nav.main{display:flex;gap:4px}
+nav.main button{padding:7px 12px;border-radius:8px;color:var(--muted);font-weight:500}
+nav.main button.on{color:var(--text);background:var(--card)}
+.hsearch{flex:1;max-width:360px;margin-left:auto}
+.hsearch input{width:100%;padding:8px 12px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:700;color:#1a1206}
+
+main{padding:28px 32px 80px;max-width:1360px;margin:0 auto}
+.screen{display:none}
+.screen.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+h1{font-size:28px;font-weight:800;letter-spacing:-.6px}
+h2{font-size:18px;font-weight:700;letter-spacing:-.2px}
+h3{font-size:15px;font-weight:600}
+.muted{color:var(--muted)} .dim{color:var(--dim)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-weight:600;background:var(--card);border:1px solid var(--line)}
+.btn:hover{border-color:#3b4050}
+.btn.primary{background:var(--accent);color:#1a1206;border-color:var(--accent)}
+.btn.primary:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad);border-color:#4a2a2a}
+.btn.on{border-color:var(--accent);color:var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-weight:500}
+.chip.on{background:rgba(245,181,68,.12);border-color:var(--accent);color:var(--accent)}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--muted)}
+.pill-ver{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--dim);border:1px dashed var(--line);padding:2px 8px;border-radius:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+
+/* poster */
+.poster{position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;color:#fff;isolation:isolate}
+.poster::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--pg)}
+.poster::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.75))}
+.poster .pt{font-weight:800;font-size:15px;line-height:1.15;letter-spacing:-.3px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.poster .py{font-size:11px;opacity:.75;margin-top:3px}
+.poster .glyph{position:absolute;top:10px;right:12px;font-size:30px;opacity:.35}
+
+/* rows */
+.row{margin-top:34px}
+.row-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.row-head .sub{color:var(--dim);font-size:12px}
+.row-head .more{margin-left:auto;color:var(--muted);font-size:13px}
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:158px;gap:14px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+.mcard{cursor:pointer;position:relative}
+.mcard:hover .poster{outline:2px solid var(--accent);outline-offset:2px}
+.mcard .meta{margin-top:8px;font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.mcard .reason{margin-top:3px;font-size:11.5px;color:var(--dim);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mcard .reason b{color:var(--muted);font-weight:500}
+.mcard .x{position:absolute;top:6px;left:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.6);display:none;place-items:center;font-size:13px}
+.mcard:hover .x{display:grid}
+.rank{position:absolute;left:-6px;bottom:44px;font-size:64px;font-weight:800;line-height:1;color:var(--bg);-webkit-text-stroke:2px #555;z-index:2}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:stretch;background:linear-gradient(120deg,#1c1a22,#14161c);border:1px solid var(--line);border-radius:18px;padding:28px;overflow:hidden;position:relative}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);font-weight:600}
+.hero h1{margin:8px 0 10px;font-size:34px}
+.hero .why{margin-top:16px;padding:12px 14px;border-left:3px solid var(--accent);background:rgba(245,181,68,.06);border-radius:0 8px 8px 0;font-size:13px;color:var(--muted)}
+.hero .art{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;transform:rotate(-4deg) translateY(10px)}
+.banner{display:flex;gap:12px;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(106,168,255,.08);border:1px solid rgba(106,168,255,.25);color:#bcd5ff;font-size:13px;margin-bottom:20px}
+
+/* stars */
+.stars{position:relative;display:inline-block;font-size:26px;letter-spacing:3px;cursor:pointer;user-select:none;line-height:1}
+.stars .bgs{color:#3a3f4c}
+.stars .fgs{position:absolute;inset:0;overflow:hidden;color:var(--accent);white-space:nowrap;pointer-events:none}
+.stars.sm{font-size:18px;letter-spacing:2px}
+
+/* onboarding */
+.ob{max-width:920px;margin:0 auto}
+.steps{display:flex;gap:8px;margin-bottom:28px}
+.steps div{flex:1;height:4px;border-radius:4px;background:var(--line)}
+.steps div.on{background:var(--accent)}
+.genre-grid{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 30px}
+.rate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;margin:22px 0}
+.rate-grid .item{display:flex;flex-direction:column;gap:8px;align-items:center}
+.rate-grid .item .poster{width:100%}
+.rate-grid .item.done .poster{outline:2px solid var(--good);outline-offset:2px}
+.ob-foot{display:flex;align-items:center;gap:16px;position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);padding:28px 0 16px}
+.counter{font-weight:700;font-size:15px}
+.counter em{font-style:normal;color:var(--accent)}
+
+/* detail */
+.detail{display:grid;grid-template-columns:260px 1fr;gap:36px}
+.detail .poster{width:100%}
+.trailer{aspect-ratio:16/9;border-radius:12px;background:repeating-linear-gradient(45deg,#16181e 0 14px,#1a1c23 14px 28px);border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);margin-top:20px}
+.trailer .play{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;font-size:22px;margin:0 auto 8px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ratebox{display:flex;align-items:center;gap:16px;margin-top:20px;padding:16px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}
+.ratebox .val{font-size:22px;font-weight:800;min-width:46px}
+.taginput{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.taginput input{width:180px;padding:6px 10px}
+.facts{display:grid;grid-template-columns:repeat(4,auto);gap:4px 28px;margin-top:16px;font-size:13px;width:max-content}
+.facts dt{color:var(--dim)} .facts dd{font-weight:500}
+
+/* search */
+.search-layout{display:grid;grid-template-columns:250px 1fr;gap:28px}
+.filters{display:flex;flex-direction:column;gap:22px;position:sticky;top:120px;align-self:start}
+.filters .chips{display:flex;flex-wrap:wrap;gap:6px}
+.filters .chip{padding:5px 11px;font-size:12.5px}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px}
+.empty{padding:60px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+
+/* profile */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:24px 0 18px}
+.tabs button{padding:10px 14px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500}
+.tabs button.on{color:var(--text);border-color:var(--accent)}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:600;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.015)}
+.mini{width:36px;aspect-ratio:2/3;border-radius:5px;padding:0}
+.mini .pt,.mini .py,.mini .glyph{display:none}
+.iconbtn{padding:6px 10px;border-radius:7px;color:var(--muted);border:1px solid transparent}
+.iconbtn:hover{border-color:var(--line);color:var(--text)}
+.iconbtn.del:hover{color:var(--bad);border-color:#4a2a2a}
+.src{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--dim)}
+
+/* lab */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.kpi .l{font-size:12px;color:var(--dim)} .kpi .v{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-top:4px}
+.kpi .d{font-size:12px;margin-top:2px}
+.up{color:var(--good)} .down{color:var(--bad)}
+.lab-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.status.live{background:rgba(76,195,138,.12);color:var(--good)}
+.status.pass{background:rgba(106,168,255,.12);color:var(--info)}
+.status.fail{background:rgba(239,93,93,.12);color:var(--bad)}
+.status.run{background:rgba(245,181,68,.12);color:var(--accent)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.pipeline{display:flex;align-items:center;gap:0;margin-top:14px}
+.pipeline .st{flex:1;text-align:center;font-size:12px;padding:10px 6px;border:1px solid var(--line);background:var(--bg2);position:relative}
+.pipeline .st:first-child{border-radius:8px 0 0 8px} .pipeline .st:last-child{border-radius:0 8px 8px 0}
+.pipeline .st.done{color:var(--good)} .pipeline .st.cur{color:var(--accent);border-color:var(--accent)}
+.chart{display:flex;align-items:flex-end;gap:10px;height:170px;margin-top:18px;padding:0 4px;border-bottom:1px solid var(--line);position:relative}
+.chart .bar{flex:1;border-radius:6px 6px 0 0;background:#2d3340;position:relative;transition:.2s}
+.chart .bar.ok{background:linear-gradient(180deg,#5d9bff,#3a6fd1)}
+.chart .bar.rej{background:repeating-linear-gradient(45deg,#4a2a2a 0 5px,#3a2222 5px 10px)}
+.chart .bar span{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--muted)}
+.chart .thr{position:absolute;left:0;right:0;border-top:1px dashed var(--accent);font-size:10px;color:var(--accent)}
+.chart-x{display:flex;gap:10px;padding:6px 4px 0;font-size:10.5px;color:var(--dim)}
+.chart-x div{flex:1;text-align:center}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+.best{color:var(--accent);font-weight:700}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#22262f;border:1px solid #363b48;padding:12px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:100;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.toast .ver{color:var(--dim);font-size:11px}
+
+/* responsive */
+@media (max-width:900px){
+  header.app{padding:10px 16px;gap:14px;flex-wrap:wrap}
+  nav.main{order:3;width:100%;overflow-x:auto}
+  main{padding:20px 16px 80px}
+  .hero,.detail,.search-layout,.lab-grid{grid-template-columns:1fr}
+  .hero .art{display:none}
+  .detail .poster{max-width:220px}
+  .filters{position:static}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="mockbar">
+  <b>MOCK · chọn màn hình:</b>
+  <button data-go="onboarding">① Onboarding</button>
+  <button data-go="home">② Trang chủ</button>
+  <button data-go="detail">③ Chi tiết phim</button>
+  <button data-go="search">④ Tìm kiếm & lọc</button>
+  <button data-go="profile">⑤ Hồ sơ</button>
+  <button data-go="lab">⑥ Lab (nội bộ)</button>
+  <button id="roleBtn" style="margin-left:auto">Vai trò: Người dùng</button>
+  <span style="white-space:nowrap">Dữ liệu & số liệu minh hoạ</span>
+</div>
+
+<header class="app" id="appHeader">
+  <div class="logo">Cine<span>Rec</span></div>
+  <nav class="main">
+    <button data-go="home">Trang chủ</button>
+    <button data-go="search">Khám phá</button>
+    <button data-go="profile">Danh sách của tôi</button>
+    <button data-go="lab" class="admin-only">Lab</button>
+  </nav>
+  <div class="hsearch"><input id="hq" placeholder="Tìm phim theo tên…"></div>
+  <div class="avatar" title="Hồ sơ" data-go="profile" style="cursor:pointer">MA</div>
+</header>
+
+<main>
+  <!-- ① ONBOARDING -->
+  <section class="screen" id="s-onboarding">
+    <div class="ob">
+      <div class="steps"><div class="on" id="st1"></div><div id="st2"></div></div>
+
+      <div id="ob1">
+        <div class="muted" style="font-size:13px">Bước 1 / 2</div>
+        <h1 style="margin-top:4px">Bạn thích xem thể loại nào?</h1>
+        <p class="muted" style="margin-top:6px">Chọn ít nhất 2 thể loại để chúng tôi biết nên gợi ý gì cho bạn trước.</p>
+        <div class="genre-grid" id="genreGrid"></div>
+        <button class="btn primary" id="toStep2" disabled>Tiếp tục →</button>
+      </div>
+
+      <div id="ob2" style="display:none">
+        <div class="muted" style="font-size:13px">Bước 2 / 2</div>
+        <h1 style="margin-top:4px">Chấm vài phim bạn đã xem</h1>
+        <p class="muted" style="margin-top:6px">Chấm tối thiểu 5 phim (0,5–5 sao). Chưa xem thì bỏ qua. Càng chấm nhiều, gợi ý càng sát.</p>
+        <div class="rate-grid" id="rateGrid"></div>
+        <div class="ob-foot">
+          <div class="counter">Đã chấm <em id="obCount">0</em> / 5</div>
+          <div class="muted" style="font-size:13px" id="obHint">Còn 5 phim nữa để mở “Dành cho bạn”</div>
+          <button class="btn ghost" style="margin-left:auto" id="obMore">Hiện phim khác</button>
+          <button class="btn primary" id="obDone" disabled>Xem gợi ý của tôi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② HOME -->
+  <section class="screen" id="s-home">
+    <div class="banner" id="coldBanner" style="display:none">
+      <span>ℹ️</span><span>Bạn mới chấm <b id="cbN">2</b> phim. Chấm thêm <b id="cbLeft">3</b> phim để nhận gợi ý cá nhân hoá — hiện đang hiển thị phim thịnh hành theo thể loại bạn chọn.</span>
+      <button class="btn" style="margin-left:auto;padding:6px 12px" data-go="onboarding">Chấm thêm</button>
+    </div>
+    <div class="hero" id="hero"></div>
+    <div id="homeRows"></div>
+  </section>
+
+  <!-- ③ DETAIL -->
+  <section class="screen" id="s-detail"></section>
+
+  <!-- ④ SEARCH -->
+  <section class="screen" id="s-search">
+    <div class="search-layout">
+      <aside class="filters">
+        <div>
+          <h3 style="margin-bottom:8px">Tìm theo tên</h3>
+          <input id="q" placeholder="vd. Inception" style="width:100%">
+        </div>
+        <div>
+          <h3 style="margin-bottom:8px">Thể loại</h3>
+          <div class="chips" id="fGenres"></div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:8px">Năm phát hành</h3>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="y1" type="number" value="1990" style="width:90px"> <span class="dim">–</span> <input id="y2" type="number" value="2023" style="width:90px">
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:8px">Điểm trung bình tối thiểu: <span id="minRv" class="best">3.5</span></h3>
+          <input id="minR" type="range" min="0" max="5" step="0.5" value="3.5" style="width:100%;padding:0;accent-color:#f5b544">
+        </div>
+        <div>
+          <h3 style="margin-bottom:8px">Sắp xếp</h3>
+          <select id="sort" style="width:100%">
+            <option value="rel">Phù hợp với bạn</option>
+            <option value="avg">Điểm trung bình</option>
+            <option value="year">Mới nhất</option>
+            <option value="pop">Phổ biến</option>
+          </select>
+        </div>
+        <button class="btn ghost" id="reset">Xoá bộ lọc</button>
+      </aside>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:18px">
+          <h1>Khám phá</h1><span class="muted" id="resCount"></span>
+        </div>
+        <div id="activeF" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px"></div>
+        <div class="result-grid" id="results"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ PROFILE -->
+  <section class="screen" id="s-profile">
+    <div style="display:flex;align-items:center;gap:18px">
+      <div class="avatar" style="width:64px;height:64px;font-size:22px">MA</div>
+      <div>
+        <h1>Minh Anh</h1>
+        <div class="muted">minhanh@example.com · Thể loại yêu thích: <span id="favG"></span></div>
+      </div>
+      <button class="btn" style="margin-left:auto">Sửa hồ sơ</button>
+    </div>
+    <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card kpi"><div class="l">Phim đã chấm</div><div class="v" id="pRated">0</div></div>
+      <div class="card kpi"><div class="l">Danh sách xem sau</div><div class="v" id="pWl">0</div></div>
+      <div class="card kpi"><div class="l">Đã đánh dấu “Không quan tâm”</div><div class="v" id="pNi">0</div></div>
+      <div class="card kpi"><div class="l">Điểm trung bình bạn chấm</div><div class="v" id="pAvg">–</div></div>
+    </div>
+    <div class="tabs" id="pTabs">
+      <button class="on" data-t="ratings">Lịch sử chấm</button>
+      <button data-t="watchlist">Xem sau</button>
+      <button data-t="ni">Không quan tâm</button>
+      <button data-t="account">Tài khoản & dữ liệu</button>
+    </div>
+    <div id="pBody"></div>
+  </section>
+
+  <!-- ⑥ LAB -->
+  <section class="screen" id="s-lab">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <h1>Lab</h1><span class="tag">Chỉ admin · nhóm phát triển & giảng viên</span>
+      <div style="margin-left:auto;display:flex;gap:10px">
+        <button class="btn" id="btnRetrain">↻ Chạy fine-tune ngay</button>
+        <button class="btn danger" id="btnRollback">⟲ Rollback về v1.3.0</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="card kpi"><div class="l">Mô hình đang phục vụ</div><div class="v mono" style="font-size:20px;margin-top:8px" id="liveVer">v1.4.2</div><div class="d"><span class="status live"><span class="dot"></span>live</span> <span class="dim">từ 02:14 hôm nay</span></div></div>
+      <div class="card kpi"><div class="l">NDCG@10 (cửa sổ giữ riêng)</div><div class="v">0.1584</div><div class="d up">▲ +0.0031 so với v1.4.1</div></div>
+      <div class="card kpi"><div class="l">Độ trễ API gợi ý p95</div><div class="v">184 ms</div><div class="d dim">ngưỡng 300 ms</div></div>
+      <div class="card kpi"><div class="l">Tương tác mới chờ học</div><div class="v">3 412</div><div class="d dim">ngưỡng kích hoạt 5 000 · hoặc 02:00 đêm</div></div>
+    </div>
+
+    <div class="lab-grid">
+      <div class="card">
+        <div style="display:flex;align-items:center"><h2>NDCG@10 qua các lần học lại</h2><span class="dim" style="margin-left:auto;font-size:12px">luồng phát lại ML-32M + dữ liệu app</span></div>
+        <div class="chart" id="chart"></div>
+        <div class="chart-x" id="chartX"></div>
+        <div style="display:flex;gap:16px;margin-top:12px;font-size:12px" class="muted">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#4d86e8"></span> qua cổng, đã triển khai</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#4a2a2a"></span> bị cổng chặn</span>
+          <span style="color:var(--accent)">- - ngưỡng: không giảm quá 1%</span>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Lần học lại đang chạy</h2>
+        <div class="muted" style="margin-top:4px;font-size:13px">Fine-tune tăng dần từ <span class="mono">v1.4.2</span> · replay 30% · lr 2e-4 · 3 epoch</div>
+        <div class="pipeline">
+          <div class="st done">✓ Gom sự kiện</div>
+          <div class="st done">✓ Dựng chuỗi</div>
+          <div class="st cur">● Fine-tune 2/3</div>
+          <div class="st">Cổng đánh giá</div>
+          <div class="st">Triển khai</div>
+        </div>
+        <div style="margin-top:20px"><h3>Cấu hình mô hình đang phục vụ</h3></div>
+        <table style="margin-top:6px" class="mono">
+          <tr><td class="dim">Khung</td><td>SASRec · 2 block · 2 head · d=128</td></tr>
+          <tr><td class="dim">Loss</td><td>Sampled softmax (512 âm) + 0.1·InfoNCE</td></tr>
+          <tr><td class="dim">Nội dung</td><td>multi-hot thể loại + sentence-emb mô tả · cổng học được</td></tr>
+          <tr><td class="dim">Xếp hạng lại</td><td>lọc đã xem / không quan tâm · MMR λ=0.2</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;align-items:center"><h2>So sánh offline trên tập test (chia theo thời gian)</h2><span class="dim" style="margin-left:auto;font-size:12px">mean ± std qua 3 seed · 30 lần thử TPE mỗi mô hình</span></div>
+      <table style="margin-top:12px" id="cmp"></table>
+      <div class="dim" style="font-size:12px;margin-top:10px">* p &lt; 0.05, kiểm định t cặp đôi theo người dùng so với baseline mạnh nhất (eSASRec).</div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>Lịch sử phiên bản (model_versions)</h2>
+      <table style="margin-top:12px" id="versions"></table>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- data ---------------- */
+const GENRES=["Hành động","Phiêu lưu","Hoạt hình","Hài","Tội phạm","Tài liệu","Chính kịch","Gia đình","Giả tưởng","Kinh dị","Bí ẩn","Lãng mạn","Khoa học viễn tưởng","Giật gân","Chiến tranh","Nhạc kịch"];
+const GLYPH={"Hành động":"✦","Phiêu lưu":"⛰","Hoạt hình":"✿","Hài":"☺","Tội phạm":"♠","Tài liệu":"◎","Chính kịch":"◐","Gia đình":"⌂","Giả tưởng":"✧","Kinh dị":"☾","Bí ẩn":"?","Lãng mạn":"♥","Khoa học viễn tưởng":"◉","Giật gân":"⚡","Chiến tranh":"✠","Nhạc kịch":"♪"};
+const M=[
+ [1,"Inception",2010,["Hành động","Khoa học viễn tưởng","Giật gân"],4.15,98,"Một kẻ trộm chuyên đánh cắp bí mật từ giấc mơ nhận nhiệm vụ ngược lại: cấy một ý tưởng vào tâm trí người khác.","Christopher Nolan",148],
+ [2,"Interstellar",2014,["Khoa học viễn tưởng","Chính kịch","Phiêu lưu"],4.12,92,"Khi Trái Đất cạn kiệt, một nhóm phi hành gia vượt qua lỗ sâu để tìm nơi sống mới cho loài người.","Christopher Nolan",169],
+ [3,"Parasite",2019,["Chính kịch","Giật gân","Hài"],4.20,85,"Gia đình nghèo họ Kim lần lượt len lỏi vào làm việc cho gia đình giàu có họ Park.","Bong Joon-ho",132],
+ [4,"Spirited Away",2001,["Hoạt hình","Giả tưởng","Phiêu lưu"],4.23,80,"Cô bé Chihiro lạc vào thế giới thần linh và phải làm việc trong nhà tắm để cứu bố mẹ.","Hayao Miyazaki",125],
+ [5,"The Dark Knight",2008,["Hành động","Tội phạm","Chính kịch"],4.18,99,"Batman đối đầu Joker, kẻ muốn đẩy Gotham vào hỗn loạn.","Christopher Nolan",152],
+ [6,"Arrival",2016,["Khoa học viễn tưởng","Chính kịch","Bí ẩn"],3.95,62,"Một nhà ngôn ngữ học được mời giải mã ngôn ngữ của sinh vật ngoài hành tinh vừa hạ cánh.","Denis Villeneuve",116],
+ [7,"Blade Runner 2049",2017,["Khoa học viễn tưởng","Giật gân","Bí ẩn"],3.92,58,"Viên cảnh sát K phát hiện một bí mật có thể đảo lộn trật tự xã hội đã đổ vỡ.","Denis Villeneuve",164],
+ [8,"Everything Everywhere All at Once",2022,["Hành động","Hài","Khoa học viễn tưởng"],4.02,55,"Bà chủ tiệm giặt bị cuốn vào cuộc chiến xuyên đa vũ trụ.","Daniels",139],
+ [9,"Dune",2021,["Khoa học viễn tưởng","Phiêu lưu","Chính kịch"],3.98,74,"Paul Atreides cùng gia tộc đến hành tinh sa mạc Arrakis, nơi duy nhất có hương liệu quý.","Denis Villeneuve",155],
+ [10,"Your Name",2016,["Hoạt hình","Lãng mạn","Giả tưởng"],4.10,49,"Hai thiếu niên xa lạ bỗng hoán đổi cơ thể cho nhau trong giấc ngủ.","Makoto Shinkai",106],
+ [11,"Whiplash",2014,["Chính kịch","Nhạc kịch"],4.13,60,"Tay trống trẻ bị một người thầy tàn nhẫn đẩy tới giới hạn.","Damien Chazelle",106],
+ [12,"La La Land",2016,["Lãng mạn","Nhạc kịch","Hài"],3.85,64,"Một nghệ sĩ jazz và một diễn viên trẻ yêu nhau giữa Los Angeles.","Damien Chazelle",128],
+ [13,"Get Out",2017,["Kinh dị","Bí ẩn","Giật gân"],3.90,57,"Chàng trai da màu về ra mắt nhà bạn gái và phát hiện điều đáng sợ.","Jordan Peele",104],
+ [14,"Mad Max: Fury Road",2015,["Hành động","Phiêu lưu","Khoa học viễn tưởng"],3.96,72,"Cuộc rượt đuổi không ngừng trên sa mạc hậu tận thế.","George Miller",120],
+ [15,"Coco",2017,["Hoạt hình","Gia đình","Nhạc kịch"],4.05,52,"Cậu bé Miguel lạc vào Vùng đất Người chết để tìm hiểu bí mật gia đình.","Lee Unkrich",105],
+ [16,"Joker",2019,["Tội phạm","Chính kịch","Giật gân"],3.88,70,"Arthur Fleck, một diễn viên hài thất bại, dần trượt vào điên loạn.","Todd Phillips",122],
+ [17,"Oppenheimer",2023,["Chính kịch","Chiến tranh"],4.08,66,"Câu chuyện về cha đẻ bom nguyên tử và cái giá của khám phá.","Christopher Nolan",180],
+ [18,"1917",2019,["Chiến tranh","Chính kịch","Hành động"],3.97,50,"Hai người lính phải băng qua chiến tuyến để truyền một mệnh lệnh.","Sam Mendes",119],
+ [19,"Knives Out",2019,["Bí ẩn","Hài","Tội phạm"],3.86,54,"Thám tử Benoit Blanc điều tra cái chết của một tiểu thuyết gia giàu có.","Rian Johnson",130],
+ [20,"Spider-Man: Into the Spider-Verse",2018,["Hoạt hình","Hành động","Phiêu lưu"],4.07,61,"Miles Morales gặp những Người Nhện từ các vũ trụ khác.","Persichetti, Ramsey, Rothman",117],
+ [21,"Her",2013,["Lãng mạn","Khoa học viễn tưởng","Chính kịch"],3.93,47,"Một người đàn ông cô đơn yêu hệ điều hành trí tuệ nhân tạo của mình.","Spike Jonze",126],
+ [22,"Hereditary",2018,["Kinh dị","Bí ẩn","Chính kịch"],3.72,38,"Sau cái chết của bà, một gia đình phát hiện những bí mật kinh hoàng.","Ari Aster",127],
+ [23,"The Grand Budapest Hotel",2014,["Hài","Phiêu lưu","Tội phạm"],3.98,59,"Người gác cổng huyền thoại và cậu học việc dính vào vụ trộm tranh.","Wes Anderson",99],
+ [24,"Free Solo",2018,["Tài liệu","Phiêu lưu"],4.00,22,"Alex Honnold leo vách El Capitan không dây bảo hộ.","Chin, Vasarhelyi",100],
+ [25,"Past Lives",2023,["Lãng mạn","Chính kịch"],3.99,18,"Hai người bạn thơ ấu gặp lại nhau sau hai mươi năm.","Celine Song",105],
+ [26,"Prisoners",2013,["Tội phạm","Bí ẩn","Giật gân"],3.97,51,"Khi con gái mất tích, người cha quyết tự tay tìm thủ phạm.","Denis Villeneuve",153],
+ [27,"Up",2009,["Hoạt hình","Phiêu lưu","Gia đình"],3.98,68,"Ông lão buộc bóng bay vào nhà và bay đến Nam Mỹ.","Pete Docter",96],
+ [28,"Âm Thầm Bên Em",2026,["Lãng mạn","Chính kịch"],0,0,"Hai người bạn cũ gặp lại nhau ở Đà Lạt sau mười năm, mỗi người mang một điều chưa từng nói ra.","—",112],
+].map(a=>({id:a[0],title:a[1],year:a[2],genres:a[3],avg:a[4],pop:a[5],desc:a[6],dir:a[7],min:a[8]}));
+const byId=id=>M.find(m=>m.id===id);
+
+/* ---------------- state ---------------- */
+const S={
+  genres:new Set(["Khoa học viễn tưởng","Giật gân","Hoạt hình"]),
+  ratings:new Map([[2,{r:5,t:1731540000,src:"app"}],[6,{r:4.5,t:1731450000,src:"app"}],[4,{r:4,t:1731300000,src:"app"}],[13,{r:3,t:1731200000,src:"app"}],[11,{r:4.5,t:1731100000,src:"app"}],[12,{r:2.5,t:1731000000,src:"app"}]]),
+  tags:new Map([[2,["du hành thời gian","nhạc Hans Zimmer"]]]),
+  watchlist:new Set([9,17]),
+  notInterested:new Set([16]),
+  watched:new Set([2,6,4,13,11,12]),
+  current:1, ver:"v1.4.2", obShown:0
+};
+
+/* ---------------- helpers ---------------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function hue(str){let h=0;for(const c of str)h=(h*31+c.charCodeAt(0))%360;return h}
+function poster(m,cls=""){
+  const h=hue(m.title),h2=(h+40)%360;
+  return `<div class="poster ${cls}" style="--pg:linear-gradient(155deg,hsl(${h} 55% 38%),hsl(${h2} 60% 16%))"><div class="glyph">${GLYPH[m.genres[0]]||"✦"}</div><div class="pt">${m.title}</div><div class="py">${m.year} · ${m.genres[0]}</div></div>`;
+}
+function starsHTML(val,id,sm){
+  return `<span class="stars ${sm?"sm":""}" data-sid="${id}"><span class="bgs">★★★★★</span><span class="fgs" style="width:${val/5*100}%">★★★★★</span></span>`;
+}
+function bindStars(root,onSet){
+  root.querySelectorAll(".stars").forEach(el=>{
+    const fg=el.querySelector(".fgs"); const cur=()=>parseFloat(fg.style.width)/20;
+    let saved=cur();
+    const at=e=>{const r=el.getBoundingClientRect();return Math.max(.5,Math.min(5,Math.ceil((e.clientX-r.left)/r.width*10)/2))};
+    el.onmousemove=e=>fg.style.width=at(e)/5*100+"%";
+    el.onmouseleave=()=>fg.style.width=saved/5*100+"%";
+    el.onclick=e=>{saved=at(e);fg.style.width=saved/5*100+"%";onSet(+el.dataset.sid,saved)};
+  });
+}
+let tt;function toast(msg){const t=$("#toast");t.innerHTML=`<span>${msg}</span>`+(curScreen==="lab"?`<span class="ver">model ${S.ver}</span>`:"");t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2600)}
+function excluded(id){return S.ratings.has(id)||S.notInterested.has(id)||S.watched.has(id)}
+function lastWatched(){return [...S.ratings.entries()].filter(([,v])=>v.r>=4).sort((a,b)=>b[1].t-a[1].t).map(([id])=>byId(id))}
+function sim(a,b){const s=a.genres.filter(g=>b.genres.includes(g)).length;return s+(a.dir===b.dir?1.5:0)+(Math.abs(a.year-b.year)<6?.3:0)}
+function nearestHistory(m){const h=lastWatched();if(!h.length)return null;return h.map(x=>[x,sim(m,x)]).sort((a,b)=>b[1]-a[1])[0][0]}
+function score(m){let s=m.avg*0.6+m.pop/100;lastWatched().slice(0,4).forEach((h,i)=>s+=sim(m,h)*(1-i*.15));m.genres.forEach(g=>S.genres.has(g)&&(s+=.4));if(m.pop===0)s+=1.2;return s}
+
+function mcard(m,{reason,rank,showX=true}={}){
+  return `<div class="mcard" data-id="${m.id}">
+    ${rank?`<div class="rank">${rank}</div>`:""}
+    ${poster(m)}
+    ${showX?`<button class="x" title="Không quan tâm" data-ni="${m.id}">✕</button>`:""}
+    <div class="meta">${m.avg?`<span style="color:var(--accent)">★ ${m.avg.toFixed(1)}</span>`:`<span class="tag" style="color:var(--info)">Mới</span>`}<span>${m.year}</span></div>
+    ${reason?`<div class="reason">${reason}</div>`:""}
+  </div>`;
+}
+function bindCards(root){
+  root.querySelectorAll(".mcard").forEach(c=>c.onclick=e=>{
+    const ni=e.target.closest("[data-ni]");
+    if(ni){e.stopPropagation();S.notInterested.add(+ni.dataset.ni);toast("Đã ẩn phim này · gợi ý đã cập nhật");render();return}
+    openDetail(+c.dataset.id)});
+}
+
+/* ---------------- routing ---------------- */
+function setRole(a){S.admin=a;document.body.classList.toggle("admin",a);$("#roleBtn").textContent="Vai trò: "+(a?"Admin":"Người dùng")}
+function go(name){
+  if(name==="lab"&&!S.admin)setRole(true);
+  $$(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+name));
+  $$("[data-go]").forEach(b=>b.classList&&b.classList.toggle("on",b.dataset.go===name));
+  $("#appHeader").style.display=name==="onboarding"?"none":"";
+  window.scrollTo(0,0); render(name);
+}
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+function openDetail(id){S.current=id;go("detail")}
+let curScreen="home";
+function render(name){if(name)curScreen=name;({onboarding:rOnb,home:rHome,detail:rDetail,search:rSearch,profile:rProfile,lab:rLab})[curScreen]()}
+
+/* ---------------- ① onboarding ---------------- */
+function rOnb(){
+  $("#genreGrid").innerHTML=GENRES.map(g=>`<button class="chip ${S.genres.has(g)?"on":""}" data-g="${g}"><span>${GLYPH[g]}</span>${g}</button>`).join("");
+  $$("#genreGrid .chip").forEach(c=>c.onclick=()=>{const g=c.dataset.g;S.genres.has(g)?S.genres.delete(g):S.genres.add(g);rOnb()});
+  $("#toStep2").disabled=S.genres.size<2;
+  const pool=M.filter(m=>m.pop>45).sort((a,b)=>b.pop-a.pop);
+  const list=pool.slice(0,10+S.obShown);
+  $("#rateGrid").innerHTML=list.map(m=>{const r=S.ratings.get(m.id)?.r||0;return `<div class="item ${r?"done":""}">${poster(m)}${starsHTML(r,m.id,true)}<span class="dim" style="font-size:11px">${r?r+" sao":"Chưa xem? Bỏ qua"}</span></div>`}).join("");
+  bindStars($("#rateGrid"),(id,v)=>{S.ratings.set(id,{r:v,t:Date.now()/1000|0,src:"app"});S.watched.add(id);rOnb()});
+  const n=S.ratings.size;$("#obCount").textContent=n;$("#obDone").disabled=n<5;
+  $("#obHint").textContent=n>=5?"Đủ rồi! Bạn có thể chấm thêm hoặc tiếp tục.":`Còn ${5-n} phim nữa để mở “Dành cho bạn”`;
+}
+$("#toStep2").onclick=()=>{$("#ob1").style.display="none";$("#ob2").style.display="";$("#st2").classList.add("on");rOnb()};
+$("#obMore").onclick=()=>{S.obShown+=5;rOnb()};
+$("#obDone").onclick=()=>{toast("Xong! Đây là gợi ý dành cho bạn");go("home")};
+
+/* ---------------- ② home ---------------- */
+function rHome(){
+  const cold=S.ratings.size<5;
+  $("#coldBanner").style.display=cold?"flex":"none";
+  if(cold){$("#cbN").textContent=S.ratings.size;$("#cbLeft").textContent=5-S.ratings.size}
+  const cand=M.filter(m=>!excluded(m.id));
+  const forYou=[...cand].sort((a,b)=>score(b)-score(a));
+  const top=forYou[0], why=nearestHistory(top);
+  $("#hero").innerHTML=`<div>
+      <div class="eyebrow">${cold?"Thịnh hành trong thể loại bạn chọn":"Gợi ý hàng đầu cho bạn"}</div>
+      <h1>${top.title}</h1>
+      <div class="muted">${top.year} · ${top.genres.join(" · ")} · ${top.min} phút ${top.avg?`· <span style="color:var(--accent)">★ ${top.avg.toFixed(2)}</span>`:""}</div>
+      <p style="margin-top:12px;max-width:520px;color:#c9ccd4">${top.desc}</p>
+      ${why&&!cold?`<div class="why">Vì bạn đã chấm <b style="color:var(--text)">${why.title}</b> ${S.ratings.get(why.id).r} sao — cùng ${top.genres.filter(g=>why.genres.includes(g)).join(", ")||"phong cách"}${top.dir===why.dir?`, cùng đạo diễn ${top.dir}`:""}.</div>`:""}
+      <div class="actions"><button class="btn primary" data-open="${top.id}">▶ Xem trailer</button><button class="btn" data-wl="${top.id}">${S.watchlist.has(top.id)?"✓ Đã thêm":"+ Xem sau"}</button><button class="btn ghost" data-nih="${top.id}">Không quan tâm</button></div>
+    </div>
+    <div class="art">${forYou.slice(1,7).map(m=>poster(m)).join("")}</div>`;
+  $("#hero").querySelector("[data-open]").onclick=()=>openDetail(top.id);
+  $("#hero").querySelector("[data-wl]").onclick=()=>{S.watchlist.has(top.id)?S.watchlist.delete(top.id):S.watchlist.add(top.id);toast("Đã cập nhật danh sách xem sau");rHome()};
+  $("#hero").querySelector("[data-nih]").onclick=()=>{S.notInterested.add(top.id);toast("Đã ẩn · gợi ý đã cập nhật");rHome()};
+
+  const rows=[];
+  if(!cold){
+    rows.push({t:"Dành cho bạn",sub:"Chọn riêng theo sở thích của bạn",items:forYou.slice(1,13).map(m=>{const w=nearestHistory(m);return mcard(m,{reason:w?`Vì bạn đã xem <b>${w.title}</b>`:""})})});
+    lastWatched().slice(0,2).forEach(h=>{
+      const sims=cand.filter(m=>m.id!==h.id).sort((a,b)=>sim(b,h)-sim(a,h)).slice(0,10);
+      rows.push({t:`Vì bạn đã xem ${h.title}`,sub:"Có thể bạn cũng thích",items:sims.map(m=>mcard(m))});
+    });
+  }
+  const trend=[...cand].filter(m=>!cold||m.genres.some(g=>S.genres.has(g))).sort((a,b)=>b.pop-a.pop).slice(0,10);
+  rows.push({t:cold?"Thịnh hành — theo thể loại bạn chọn":"Thịnh hành tuần này",sub:"Được xem nhiều nhất 7 ngày qua",items:trend.map((m,i)=>mcard(m,{rank:i+1})),rank:true});
+  [...S.genres].slice(0,2).forEach(g=>rows.push({t:g,sub:"",items:cand.filter(m=>m.genres.includes(g)).sort((a,b)=>score(b)-score(a)).map(m=>mcard(m))}));
+  const fresh=cand.filter(m=>m.pop===0);
+  if(fresh.length&&!cold) rows.push({t:"Mới thêm vào kho",sub:"Phim vừa có mặt trên CineRec",items:fresh.map(m=>mcard(m,{reason:"Khớp thể loại bạn hay xem"}))});
+
+  $("#homeRows").innerHTML=rows.map(r=>`<div class="row"><div class="row-head"><h2>${r.t}</h2><span class="sub">${r.sub}</span><a class="more" href="#" onclick="go('search');return false">Xem tất cả →</a></div><div class="strip" ${r.rank?'style="grid-auto-columns:170px;padding-left:18px"':""}>${r.items.join("")||'<div class="dim">Không còn phim nào trong hàng này.</div>'}</div></div>`).join("");
+  bindCards($("#homeRows"));
+}
+
+/* ---------------- ③ detail ---------------- */
+function rDetail(){
+  const m=byId(S.current), r=S.ratings.get(m.id)?.r||0, tags=S.tags.get(m.id)||[];
+  const sims=M.filter(x=>x.id!==m.id&&!S.notInterested.has(x.id)).sort((a,b)=>sim(b,m)-sim(a,m)).slice(0,10);
+  $("#s-detail").innerHTML=`
+    <button class="btn ghost" style="margin-bottom:18px;padding:6px 10px" onclick="history.length;go('home')">← Trang chủ</button>
+    <div class="detail">
+      <div>${poster(m)}
+        <div class="actions" style="flex-direction:column">
+          <button class="btn ${S.watched.has(m.id)?"on":""}" id="dWatched">${S.watched.has(m.id)?"✓ Đã xem":"◉ Đánh dấu đã xem"}</button>
+          <button class="btn ${S.watchlist.has(m.id)?"on":""}" id="dWl">${S.watchlist.has(m.id)?"✓ Trong danh sách xem sau":"+ Xem sau"}</button>
+          <button class="btn ghost ${S.notInterested.has(m.id)?"on":""}" id="dNi">${S.notInterested.has(m.id)?"Đã ẩn khỏi gợi ý (hoàn tác)":"⊘ Không quan tâm"}</button>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${m.genres.map(g=>`<span class="tag">${g}</span>`).join("")}${m.pop===0?'<span class="tag" style="color:var(--info);border-color:#2b4570">Phim mới</span>':""}</div>
+        <h1 style="font-size:36px;margin-top:10px">${m.title}</h1>
+        <dl class="facts"><dt>Năm</dt><dt>Thời lượng</dt><dt>Đạo diễn</dt><dt>Điểm cộng đồng</dt>
+          <dd>${m.year}</dd><dd>${m.min} phút</dd><dd>${m.dir}</dd><dd>${m.avg?`<span style="color:var(--accent)">★ ${m.avg.toFixed(2)}</span> <span class="dim">· ${(m.pop*812).toLocaleString("vi")} lượt</span>`:"Chưa có"}</dd></dl>
+        <p style="margin-top:16px;max-width:680px;color:#c9ccd4;font-size:15px">${m.desc}</p>
+
+        <div class="ratebox">
+          <div><div class="dim" style="font-size:12px">Bạn chấm</div><div class="val" id="rv">${r?r.toFixed(1):"–"}</div></div>
+          ${starsHTML(r,m.id)}
+          <div class="dim" style="font-size:12px;margin-left:auto;text-align:right">0,5–5 sao, bước 0,5<br>${r?`<a href="#" id="clearR" style="color:var(--bad)">Xoá điểm chấm</a>`:"Bấm vào sao để chấm"}</div>
+        </div>
+
+        <div class="taginput">
+          <span class="dim" style="font-size:12px">Tag của bạn:</span>
+          ${tags.map(t=>`<span class="chip on" style="padding:4px 10px;font-size:12px">${t}</span>`).join("")}
+          <input id="tagIn" placeholder="+ thêm tag, Enter">
+          <span class="dim" style="font-size:12px">Gợi ý: ${["đầu óc","kết bất ngờ","hình ảnh đẹp"].map(t=>`<a href="#" class="sugtag">${t}</a>`).join(", ")}</span>
+        </div>
+
+        <div class="trailer"><div style="text-align:center"><div class="play">▶</div>Xem trailer</div></div>
+      </div>
+    </div>
+    <div class="row"><div class="row-head"><h2>Phim tương tự</h2><span class="sub">Có thể bạn cũng thích</span></div>
+      <div class="strip">${sims.map(x=>mcard(x,{reason:x.genres.filter(g=>m.genres.includes(g)).slice(0,2).join(" · ")+(x.dir===m.dir?" · cùng đạo diễn":""),showX:false})).join("")}</div></div>`;
+  bindStars($("#s-detail"),(id,v)=>{S.ratings.set(id,{r:v,t:Date.now()/1000|0,src:"app"});S.watched.add(id);toast(`Đã chấm ${v} sao · gợi ý đã cập nhật`);rDetail()});
+  $("#clearR")&&($("#clearR").onclick=e=>{e.preventDefault();S.ratings.delete(m.id);toast("Đã xoá điểm chấm");rDetail()});
+  $("#dWatched").onclick=()=>{S.watched.has(m.id)?S.watched.delete(m.id):S.watched.add(m.id);toast(S.watched.has(m.id)?"Đã đánh dấu đã xem":"Đã bỏ đánh dấu đã xem");rDetail()};
+  $("#dWl").onclick=()=>{S.watchlist.has(m.id)?S.watchlist.delete(m.id):S.watchlist.add(m.id);toast(S.watchlist.has(m.id)?"Đã thêm vào xem sau":"Đã bỏ khỏi xem sau");rDetail()};
+  $("#dNi").onclick=()=>{S.notInterested.has(m.id)?S.notInterested.delete(m.id):S.notInterested.add(m.id);toast("Đã cập nhật · phim này sẽ không được gợi ý");rDetail()};
+  const addTag=t=>{if(!t)return;S.tags.set(m.id,[...(S.tags.get(m.id)||[]),t]);toast(`Đã gắn tag “${t}”`);rDetail()};
+  $("#tagIn").onkeydown=e=>{if(e.key==="Enter")addTag(e.target.value.trim())};
+  $$(".sugtag").forEach(a=>a.onclick=e=>{e.preventDefault();addTag(a.textContent)});
+  bindCards($("#s-detail"));
+}
+
+/* ---------------- ④ search ---------------- */
+const F={q:"",g:new Set(),y1:1990,y2:2026,min:3.5,sort:"rel"};
+function rSearch(){
+  $("#fGenres").innerHTML=GENRES.map(g=>`<button class="chip ${F.g.has(g)?"on":""}" data-fg="${g}">${g}</button>`).join("");
+  $$("#fGenres .chip").forEach(c=>c.onclick=()=>{const g=c.dataset.fg;F.g.has(g)?F.g.delete(g):F.g.add(g);rSearch()});
+  let res=M.filter(m=>!S.notInterested.has(m.id)&&m.title.toLowerCase().includes(F.q.toLowerCase())&&(!F.g.size||[...F.g].every(g=>m.genres.includes(g)))&&m.year>=F.y1&&m.year<=F.y2&&(m.avg>=F.min||m.avg===0));
+  const k={rel:(a,b)=>score(b)-score(a),avg:(a,b)=>b.avg-a.avg,year:(a,b)=>b.year-a.year,pop:(a,b)=>b.pop-a.pop}[F.sort];
+  res.sort(k);
+  $("#resCount").textContent=`${res.length} phim`;
+  const act=[...(F.q?[`“${F.q}”`]:[]),...F.g,`${F.y1}–${F.y2}`,`★ ≥ ${F.min}`];
+  $("#activeF").innerHTML=act.map(a=>`<span class="tag" style="padding:4px 10px">${a}</span>`).join("");
+  $("#results").innerHTML=res.length?res.map(m=>mcard(m,{reason:S.ratings.has(m.id)?`Bạn đã chấm ${S.ratings.get(m.id).r}★`:m.genres.join(" · "),showX:false})).join(""):"";
+  if(!res.length)$("#results").outerHTML;
+  $("#results").style.display=res.length?"":"block";
+  if(!res.length)$("#results").innerHTML=`<div class="empty"><div style="font-size:28px">∅</div><h3 style="margin-top:6px">Không có phim nào khớp</h3><p>Thử bỏ bớt thể loại hoặc hạ điểm tối thiểu.</p></div>`;
+  bindCards($("#results"));
+}
+$("#q").oninput=e=>{F.q=e.target.value;rSearch()};
+$("#hq").onkeydown=e=>{if(e.key==="Enter"){F.q=e.target.value;$("#q").value=F.q;go("search")}};
+$("#y1").oninput=e=>{F.y1=+e.target.value||0;rSearch()};
+$("#y2").oninput=e=>{F.y2=+e.target.value||9999;rSearch()};
+$("#minR").oninput=e=>{F.min=+e.target.value;$("#minRv").textContent=F.min;rSearch()};
+$("#sort").onchange=e=>{F.sort=e.target.value;rSearch()};
+$("#reset").onclick=()=>{Object.assign(F,{q:"",g:new Set(),y1:1990,y2:2026,min:0,sort:"rel"});$("#q").value="";$("#y1").value=1990;$("#y2").value=2026;$("#minR").value=0;$("#minRv").textContent=0;rSearch()};
+
+/* ---------------- ⑤ profile ---------------- */
+let pTab="ratings";
+const fmt=t=>new Date(t*1000).toLocaleString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+function rProfile(){
+  $("#favG").textContent=[...S.genres].join(", ");
+  $("#pRated").textContent=S.ratings.size;$("#pWl").textContent=S.watchlist.size;$("#pNi").textContent=S.notInterested.size;
+  const rs=[...S.ratings.values()].map(v=>v.r);$("#pAvg").textContent=rs.length?(rs.reduce((a,b)=>a+b,0)/rs.length).toFixed(2):"–";
+  $$("#pTabs button").forEach(b=>{b.classList.toggle("on",b.dataset.t===pTab);b.onclick=()=>{pTab=b.dataset.t;rProfile()}});
+  const B=$("#pBody");
+  if(pTab==="ratings"){
+    const rows=[...S.ratings.entries()].sort((a,b)=>b[1].t-a[1].t);
+    B.innerHTML=rows.length?`<table><tr><th></th><th>Phim</th><th>Điểm của bạn</th><th>Tag</th><th>Thời điểm</th><th></th></tr>${rows.map(([id,v])=>{const m=byId(id);return `<tr>
+      <td style="width:52px">${poster(m,"mini")}</td>
+      <td><a href="#" data-open="${id}" style="font-weight:600;text-decoration:none">${m.title}</a><div class="dim" style="font-size:12px">${m.year} · ${m.genres.slice(0,2).join(", ")}</div></td>
+      <td>${starsHTML(v.r,id,true)} <span class="muted" style="margin-left:6px">${v.r.toFixed(1)}</span></td>
+      <td>${(S.tags.get(id)||[]).map(t=>`<span class="tag">${t}</span>`).join(" ")||'<span class="dim">—</span>'}</td>
+      <td class="muted">${fmt(v.t)}</td>
+      <td style="text-align:right"><button class="iconbtn del" data-del="${id}">🗑 Xoá</button></td></tr>`}).join("")}</table>
+      <p class="dim" style="font-size:12px;margin-top:12px">Sửa điểm bằng cách bấm vào sao. Gợi ý của bạn sẽ thay đổi theo.</p>`
+      :`<div class="empty">Bạn chưa chấm phim nào.</div>`;
+    bindStars(B,(id,v)=>{S.ratings.get(id).r=v;S.ratings.get(id).t=Date.now()/1000|0;toast(`Đã sửa thành ${v} sao`);rProfile()});
+    $$("[data-del]").forEach(b=>b.onclick=()=>{S.ratings.delete(+b.dataset.del);toast("Đã xoá điểm chấm · gợi ý đã cập nhật");rProfile()});
+    $$("#pBody [data-open]").forEach(a=>a.onclick=e=>{e.preventDefault();openDetail(+a.dataset.open)});
+  } else if(pTab==="watchlist"||pTab==="ni"){
+    const set=pTab==="watchlist"?S.watchlist:S.notInterested;
+    B.innerHTML=set.size?`<div class="result-grid">${[...set].map(id=>`<div>${mcard(byId(id),{showX:false})}<button class="btn ghost" style="width:100%;margin-top:6px;padding:6px" data-rm="${id}">${pTab==="watchlist"?"Bỏ khỏi xem sau":"Cho phép gợi ý lại"}</button></div>`).join("")}</div>`:`<div class="empty">${pTab==="watchlist"?"Danh sách xem sau đang trống. Bấm “+ Xem sau” ở trang phim để thêm.":"Bạn chưa ẩn phim nào."}</div>`;
+    $$("[data-rm]").forEach(b=>b.onclick=()=>{set.delete(+b.dataset.rm);toast("Đã cập nhật");rProfile()});
+    bindCards(B);
+  } else {
+    B.innerHTML=`<div class="lab-grid"><div class="card"><h3>Dữ liệu app lưu về bạn</h3>
+      <ul class="muted" style="margin:10px 0 0 18px;line-height:1.9"><li>Tên hiển thị, email, thể loại đã chọn</li><li>Điểm chấm và tag của bạn</li><li>Hoạt động trên CineRec: phim bạn mở, trailer đã xem, danh sách xem sau, phim bạn ẩn, từ khoá tìm kiếm</li><li>Không thu thập tuổi, giới tính</li></ul>
+      <div style="display:flex;gap:10px;margin-top:16px"><button class="btn">⬇ Tải dữ liệu của tôi (.csv)</button></div></div>
+      <div class="card" style="border-color:#4a2a2a"><h3 style="color:var(--bad)">Xoá tài khoản</h3><p class="muted" style="margin-top:8px">Xoá vĩnh viễn tài khoản cùng toàn bộ điểm chấm, tag và lịch sử hoạt động. Dữ liệu của bạn sẽ không còn được dùng để gợi ý.</p><button class="btn danger" style="margin-top:16px">Xoá tài khoản và dữ liệu</button></div></div>`;
+  }
+}
+
+/* ---------------- ⑥ lab ---------------- */
+function rLab(){
+  const runs=[["v1.2.0",.1489,"full"],["v1.2.1",.1502,"ft"],["v1.3.0",.1531,"full"],["v1.3.1",.1497,"ft",1],["v1.4.0",.1546,"ft"],["v1.4.1",.1553,"ft"],["v1.4.2",.1584,"ft"]];
+  const lo=.14,hi=.16,h=v=>(v-lo)/(hi-lo)*100;
+  $("#chart").innerHTML=runs.map(r=>`<div class="bar ${r[3]?"rej":"ok"}" style="height:${h(r[1])}%"><span>${r[1].toFixed(4)}</span></div>`).join("")+`<div class="thr" style="bottom:${h(.1531*.99)}%">&nbsp;</div>`;
+  $("#chartX").innerHTML=runs.map(r=>`<div class="mono">${r[0]}<br><span class="dim">${r[2]==="full"?"toàn bộ":"fine-tune"}</span></div>`).join("");
+  const cmp=[["CL4SRec (2022)",".1312 ± .0014",".2105",".1088",".0412","0.31"],["XSimGCL (2023)",".1268 ± .0021",".2047",".1031","—","0.44"],["gSASRec (2023)",".1455 ± .0011",".2298",".1219",".0405","0.29"],["eSASRec (2025)",".1527 ± .0009",".2391",".1284",".0398","0.27"],["Đề xuất (đầy đủ)",".1569 ± .0010*",".2442*",".1316*",".0463","0.36"]];
+  $("#cmp").innerHTML=`<tr><th>Mô hình</th><th>NDCG@10</th><th>Recall@10</th><th>MRR@10</th><th>NDCG@10 · user &lt;10 tương tác</th><th>Độ phủ danh mục</th></tr>`+cmp.map((r,i)=>`<tr ${i===4?'style="background:rgba(245,181,68,.05)"':""}><td style="font-weight:${i===4?700:500}">${r[0]}</td>${r.slice(1).map((c,j)=>`<td class="mono ${i===4&&j<3?"best":""}">${c}</td>`).join("")}</tr>`).join("");
+  const vers=[["v1.4.3","fine-tune","đang chạy","run","—","—",""],["v1.4.2","fine-tune","live","live","0.1553 → 0.1584","+5 210 tương tác",""],["v1.4.1","fine-tune","qua cổng","pass","0.1546 → 0.1553","+4 980",""],["v1.4.0","fine-tune","qua cổng","pass","0.1531 → 0.1546","+5 400",""],["v1.3.1","fine-tune","bị chặn","fail","0.1531 → 0.1497","+6 020","quên dữ liệu cũ · replay 10% quá thấp"],["v1.3.0","huấn luyện lại toàn bộ","qua cổng","pass","0.1502 → 0.1531","tune lại 30 lần thử",""]];
+  $("#versions").innerHTML=`<tr><th>Phiên bản</th><th>Loại</th><th>Trạng thái</th><th>NDCG@10 cũ → mới</th><th>Dữ liệu</th><th>Ghi chú</th><th></th></tr>`+vers.map(v=>`<tr><td class="mono">${v[0]}</td><td>${v[1]}</td><td><span class="status ${v[3]}"><span class="dot"></span>${v[2]}</span></td><td class="mono">${v[4]}</td><td class="muted">${v[5]}</td><td class="muted">${v[6]||"—"}</td><td style="text-align:right">${v[3]==="pass"?`<button class="iconbtn" data-rb="${v[0]}">⟲ Dùng bản này</button>`:""}</td></tr>`).join("");
+  $$("[data-rb]").forEach(b=>b.onclick=()=>confirmRb(b.dataset.rb));
+}
+function confirmRb(v){S.ver=v;$("#liveVer").textContent=v;toast(`Đã rollback · dịch vụ gợi ý nạp lại ${v}`)}
+$("#btnRollback").onclick=()=>confirmRb("v1.3.0");
+$("#btnRetrain").onclick=()=>toast("Đã xếp hàng job fine-tune · POST /lab/retrain");
+
+$("#roleBtn").onclick=()=>{setRole(!S.admin);if(!S.admin&&curScreen==="lab")go("home")};
+go("home");
+</script>
+</body>
+</html>
