@@ -146,3 +146,12 @@ class ModelVersion(Base):
     notes: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[int] = mapped_column(BigInteger, default=now_ts)
     deployed_at: Mapped[int | None] = mapped_column(BigInteger)
+
+
+class IdSequence(Base):
+    """Bộ đếm chỉ tăng (vd. movieId của phim do quản trị thêm) — id đã cấp không bao giờ được cấp lại."""
+
+    __tablename__ = "id_sequences"
+
+    name: Mapped[str] = mapped_column(String(50), primary_key=True)
+    value: Mapped[int] = mapped_column(BigInteger)

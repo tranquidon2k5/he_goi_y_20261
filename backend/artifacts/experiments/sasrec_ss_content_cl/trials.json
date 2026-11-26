@@ -1,0 +1,26 @@
+[
+  {
+    "number": 0,
+    "hp": {
+      "d": 64,
+      "blocks": 2,
+      "heads": 2,
+      "maxlen": 100,
+      "batch": 256,
+      "lr": 0.0026070247583707684,
+      "dropout": 0.10823379771832098,
+      "wd": 0.0,
+      "n_neg": 106,
+      "fuse": "gate",
+      "cl_weight": 0.1,
+      "tau": 1.0,
+      "crop": 0.6,
+      "mask": 0.3,
+      "reorder": 0.6
+    },
+    "val_ndcg@10": 0.034127501029641676,
+    "best_epoch": 17,
+    "sec_per_epoch": 35.34625756172907,
+    "kind": "ablate:sasrec_ss_content"
+  }
+]

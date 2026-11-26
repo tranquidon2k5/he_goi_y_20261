@@ -126,7 +126,7 @@ class RecService:
     def _new_movies(self, exclude: set[int], k: int) -> list[int]:
         cat = self.live.catalog
         idx = np.flatnonzero(cat.is_new)
-        idx = idx[np.argsort(-cat.added_at[idx])]
+        idx = idx[np.lexsort((-cat.ids[idx], -cat.added_at[idx]))]  # mới thêm trước; cùng thời điểm thì id lớn trước
         return [int(cat.ids[i]) for i in idx if int(cat.ids[i]) not in exclude][:k]
 
     @staticmethod

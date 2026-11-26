@@ -1,0 +1,5 @@
+[04:59:08]   huấn luyện mô hình gốc proposed_v2 (val, seed 0, 16 epoch)
+[05:02:08] === proposed_v2: chọn 30 ngày, w = 0.5 · val 0.0530 -> 0.0597
+[05:02:10] test seed 0: rerank ndcg@10 0.0557
+[05:02:12] test seed 1: rerank ndcg@10 0.0552
+[05:02:14] test seed 2: rerank ndcg@10 0.0554

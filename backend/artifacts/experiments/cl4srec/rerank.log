@@ -1,0 +1,3 @@
+[04:25:42]   huấn luyện mô hình gốc cl4srec (val, seed 0, 12 epoch)
+[04:32:37] === cl4srec: chọn 90 ngày, w = 1.0 · val 0.0274 -> 0.0399
+[04:32:40] test seed 0: rerank ndcg@10 0.0338

@@ -16,3 +16,17 @@ web/.env*.local
 web/next-env.d.ts
 
 .playwright-mcp/
+
+# mô hình: checkpoint + đặc trưng dẫn xuất từ MovieLens (không phân phối lại); chỉ commit kết quả thí nghiệm
+backend/artifacts/*
+!backend/artifacts/experiments/
+backend/artifacts/experiments/**/*.npy
+backend/artifacts/experiments/**/*.pt
+backend/results/
+backend/results_c/
+
+# khoá bí mật ở gốc repo (vd. TMDB)
+/.env
+
+# tệp nén tải về (kết quả Colab, ...)
+/*.zip

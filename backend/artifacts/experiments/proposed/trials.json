@@ -1,0 +1,118 @@
+[
+  {
+    "number": 0,
+    "hp": {
+      "d": 64,
+      "blocks": 2,
+      "heads": 2,
+      "maxlen": 100,
+      "batch": 256,
+      "lr": 0.0005611516415334506,
+      "dropout": 0.4802857225639665,
+      "wd": 0.0,
+      "n_neg": 75,
+      "cl_weight": 0.29621516588303487,
+      "tau": 0.30271829277346235,
+      "crop": 0.6,
+      "mask": 0.3,
+      "reorder": 0.6,
+      "fuse": "add"
+    },
+    "val_ndcg@10": 0.00763614809466109,
+    "best_epoch": 2,
+    "sec_per_epoch": 22.95088537534078
+  },
+  {
+    "number": 1,
+    "hp": {
+      "d": 64,
+      "blocks": 2,
+      "heads": 2,
+      "maxlen": 100,
+      "batch": 256,
+      "lr": 0.008706020878304856,
+      "dropout": 0.4329770563201687,
+      "wd": 0.01,
+      "n_neg": 273,
+      "cl_weight": 0.054182823195332394,
+      "tau": 0.11963764382790318,
+      "crop": 0.6,
+      "mask": 0.3,
+      "reorder": 0.6,
+      "fuse": "add"
+    },
+    "val_ndcg@10": 0.031800497672627014,
+    "best_epoch": 14,
+    "sec_per_epoch": 23.198414087295532
+  },
+  {
+    "number": 2,
+    "hp": {
+      "d": 64,
+      "blocks": 2,
+      "heads": 2,
+      "maxlen": 100,
+      "batch": 256,
+      "lr": 0.0003839629299804173,
+      "dropout": 0.2465447373174767,
+      "wd": 0.0001,
+      "n_neg": 330,
+      "cl_weight": 0.011992724522955167,
+      "tau": 0.3086057974053536,
+      "crop": 0.6,
+      "mask": 0.3,
+      "reorder": 0.6,
+      "fuse": "add"
+    },
+    "val_ndcg@10": 0.026256818652638583,
+    "best_epoch": 13,
+    "sec_per_epoch": 23.168626248836517
+  },
+  {
+    "number": 3,
+    "hp": {
+      "d": 64,
+      "blocks": 2,
+      "heads": 2,
+      "maxlen": 100,
+      "batch": 256,
+      "lr": 0.007902619549708232,
+      "dropout": 0.4862528132298237,
+      "wd": 0.0,
+      "n_neg": 216,
+      "cl_weight": 0.016119044727609194,
+      "tau": 0.2203992019084621,
+      "crop": 0.6,
+      "mask": 0.3,
+      "reorder": 0.6,
+      "fuse": "gate"
+    },
+    "val_ndcg@10": 0.032383366139638645,
+    "best_epoch": 10,
+    "sec_per_epoch": 24.45010527542659
+  },
+  {
+    "number": 4,
+    "hp": {
+      "d": 64,
+      "blocks": 2,
+      "heads": 2,
+      "maxlen": 100,
+      "batch": 256,
+      "lr": 0.001,
+      "dropout": 0.2,
+      "wd": 0.0,
+      "n_neg": 256,
+      "cl_weight": 0.1,
+      "tau": 1.0,
+      "crop": 0.6,
+      "mask": 0.3,
+      "reorder": 0.6,
+      "fuse": "add"
+    },
+    "val_ndcg@10": 0.031288490416890774,
+    "best_epoch": 13,
+    "sec_per_epoch": 23.06110318005085,
+    "kind": "anchor"
+  }
+]

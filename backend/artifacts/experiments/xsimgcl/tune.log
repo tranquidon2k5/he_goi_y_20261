@@ -1,0 +1,47 @@
+[01:36:39] === tune xsimgcl: 4 lần thử, tối đa 40 epoch, kiên nhẫn 4
+[01:36:39] trial 0: {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.0005611516415334506, "layers": 3, "eps": 0.2329984854528513, "cl_weight": 0.10401663679887314, "tau": 0.07979118876474875}
+[01:38:10]   epoch 1 loss 0.8783 val ndcg@10 0.0265 (87.1s)
+[01:39:35]   epoch 2 loss 0.7731 val ndcg@10 0.0251 (85.2s)
+[01:41:02]   epoch 3 loss 0.7546 val ndcg@10 0.0263 (86.4s)
+[01:42:28]   epoch 4 loss 0.7441 val ndcg@10 0.0262 (86.4s)
+[01:43:55]   epoch 5 loss 0.7369 val ndcg@10 0.0261 (86.9s)
+[01:43:55] trial 0 -> val ndcg@10 0.0265 (epoch 1)
+[01:43:55] trial 1: {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.00020511104188433984, "layers": 1, "eps": 0.2665440364437338, "cl_weight": 0.10502105436744279, "tau": 0.41705532161810427}
+[01:44:31]   epoch 1 loss 1.8966 val ndcg@10 0.0198 (33.8s)
+[01:45:04]   epoch 2 loss 1.8909 val ndcg@10 0.0174 (33.9s)
+[01:45:37]   epoch 3 loss 1.8699 val ndcg@10 0.0156 (32.8s)
+[01:46:11]   epoch 4 loss 1.8089 val ndcg@10 0.0134 (33.9s)
+[01:46:45]   epoch 5 loss 1.7424 val ndcg@10 0.0142 (33.8s)
+[01:46:45] trial 1 -> val ndcg@10 0.0198 (epoch 1)
+[01:46:45] trial 2: {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.00010994335574766199, "layers": 3, "eps": 0.2581106602001054, "cl_weight": 0.022948683681130556, "tau": 0.08620446097910765}
+[01:48:14]   epoch 1 loss 0.7483 val ndcg@10 0.0242 (87.0s)
+[01:49:40]   epoch 2 loss 0.7290 val ndcg@10 0.0256 (86.6s)
+[01:51:07]   epoch 3 loss 0.7240 val ndcg@10 0.0266 (86.5s)
+[01:52:33]   epoch 4 loss 0.7220 val ndcg@10 0.0249 (85.9s)
+[01:53:59]   epoch 5 loss 0.7215 val ndcg@10 0.0226 (86.4s)
+[01:53:59]   dừng: hết thời gian cho phép của lần thử
+[01:53:59] trial 2 -> val ndcg@10 0.0266 (epoch 3)
+[01:53:59] trial 3: {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.00023270677083837802, "layers": 1, "eps": 0.18118910790805948, "cl_weight": 0.054182823195332394, "tau": 0.11963764382790318}
+[01:54:35]   epoch 1 loss 0.7848 val ndcg@10 0.0151 (34.0s)
+[01:55:09]   epoch 2 loss 0.7838 val ndcg@10 0.0206 (33.8s)
+[01:55:43]   epoch 3 loss 0.7834 val ndcg@10 0.0219 (34.0s)
+[01:56:17]   epoch 4 loss 0.7831 val ndcg@10 0.0239 (33.9s)
+[01:56:51]   epoch 5 loss 0.7828 val ndcg@10 0.0245 (33.9s)
+[01:57:23]   epoch 6 loss 0.7824 val ndcg@10 0.0243 (32.1s)
+[01:57:55]   epoch 7 loss 0.7821 val ndcg@10 0.0249 (32.1s)
+[01:58:26]   epoch 8 loss 0.7816 val ndcg@10 0.0253 (31.2s)
+[01:58:58]   epoch 9 loss 0.7810 val ndcg@10 0.0266 (31.6s)
+[01:59:31]   epoch 10 loss 0.7803 val ndcg@10 0.0263 (32.9s)
+[02:00:04]   epoch 11 loss 0.7794 val ndcg@10 0.0270 (32.8s)
+[02:00:04]   dừng: hết thời gian cho phép của lần thử
+[02:00:04] trial 3 -> val ndcg@10 0.0270 (epoch 11)
+[02:00:04] === best xsimgcl: 0.0270 {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.00023270677083837802, "layers": 1, "eps": 0.18118910790805948, "cl_weight": 0.054182823195332394, "tau": 0.11963764382790318}
+[02:05:01] === tune xsimgcl: 4 lần thử TPE + 1 lần thử mặc định, tối đa 40 epoch, kiên nhẫn 4
+[02:05:01] trial mặc định: {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.001, "layers": 2, "eps": 0.2, "cl_weight": 0.2, "tau": 0.2}
+[02:06:04]   epoch 1 loss 2.2704 val ndcg@10 0.0259 (58.3s)
+[02:07:05]   epoch 2 loss 2.1528 val ndcg@10 0.0249 (60.7s)
+[02:08:05]   epoch 3 loss 2.1177 val ndcg@10 0.0247 (59.9s)
+[02:09:05]   epoch 4 loss 2.0966 val ndcg@10 0.0253 (60.0s)
+[02:10:05]   epoch 5 loss 2.0820 val ndcg@10 0.0245 (60.1s)
+[02:10:05] trial mặc định -> val ndcg@10 0.0259 (epoch 1)
+[02:10:05] === best xsimgcl: 0.0270 {"d": 64, "batch": 8192, "reg": 0.0001, "cl_nodes": 4096, "lr": 0.00023270677083837802, "layers": 1, "eps": 0.18118910790805948, "cl_weight": 0.054182823195332394, "tau": 0.11963764382790318}

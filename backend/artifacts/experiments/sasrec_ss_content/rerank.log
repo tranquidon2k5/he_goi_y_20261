@@ -1,0 +1,3 @@
+[04:07:52]   huấn luyện mô hình gốc sasrec_ss_content (val, seed 0, 16 epoch)
+[04:11:45] === sasrec_ss_content: chọn 30 ngày, w = 0.5 · val 0.0443 -> 0.0489
+[04:11:46] test seed 0: rerank ndcg@10 0.0439

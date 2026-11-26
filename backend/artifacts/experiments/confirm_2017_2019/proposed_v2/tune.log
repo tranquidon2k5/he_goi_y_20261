@@ -1,0 +1,11 @@
+[05:01:14] === confirm proposed_v2: {"d": 64, "blocks": 2, "heads": 2, "maxlen": 100, "batch": 256, "lr": 0.0015930522616241021, "dropout": 0.3832290311184182, "wd": 0.0001, "n_neg": 26, "t": 0.18340450985343382, "cl_weight": 0.0, "tau": 1.0, "fuse": "gate", "warm": true, "crop": 0.6, "mask": 0.3, "reorder": 0.6}
+[05:01:15]   huấn luyện mô hình gốc gsasrec (val, seed 0, 38 epoch)
+[05:06:10]   epoch 0 (khởi tạo ấm) val ndcg@10 0.0698
+[05:06:15]   epoch 1 loss 1.7616 val ndcg@10 0.0667 (4.7s)
+[05:06:20]   epoch 2 loss 1.7557 val ndcg@10 0.0681 (4.7s)
+[05:06:25]   epoch 3 loss 1.7536 val ndcg@10 0.0722 (4.7s)
+[05:06:29]   epoch 4 loss 1.7512 val ndcg@10 0.0669 (4.7s)
+[05:06:34]   epoch 5 loss 1.7488 val ndcg@10 0.0654 (4.7s)
+[05:06:39]   epoch 6 loss 1.7477 val ndcg@10 0.0703 (4.7s)
+[05:06:43]   epoch 7 loss 1.7449 val ndcg@10 0.0649 (4.7s)
+[05:06:43] === proposed_v2: val ndcg@10 0.0722 (epoch 3)

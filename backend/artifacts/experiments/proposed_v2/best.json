@@ -1,0 +1,26 @@
+{
+  "number": 4,
+  "hp": {
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "maxlen": 100,
+    "batch": 256,
+    "lr": 0.0015930522616241021,
+    "dropout": 0.3832290311184182,
+    "wd": 0.0001,
+    "n_neg": 26,
+    "t": 0.18340450985343382,
+    "cl_weight": 0.0,
+    "tau": 1.0,
+    "fuse": "gate",
+    "warm": true,
+    "crop": 0.6,
+    "mask": 0.3,
+    "reorder": 0.6
+  },
+  "val_ndcg@10": 0.05388669991631218,
+  "best_epoch": 16,
+  "sec_per_epoch": 19.896336630771035,
+  "kind": "anchor"
+}

@@ -172,6 +172,31 @@ tr:hover td { background: rgba(255,255,255,.015) }
 .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px }
 .best { color: var(--accent); font-weight: 700 }
 
+/* lab: bảng thí nghiệm */
+tr.hl td { background: rgba(245,181,68,.07) }
+tr.ref td { font-style: italic }
+.exp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 18px }
+.exp-grid > div { overflow-x: auto }
+@media (max-width: 1100px) { .exp-grid { grid-template-columns: 1fr } }
+
+/* quản trị phim */
+.admin-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; margin-top: 18px; align-items: start }
+.admin-form { display: flex; flex-direction: column; gap: 14px }
+.admin-form label, .admin-form legend { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted) }
+.admin-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0 }
+.admin-form .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px }
+.admin-form .chip { padding: 5px 11px; font-size: 12.5px; cursor: pointer }
+.admin-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+.admin-form label.check { flex-direction: row; align-items: center; gap: 8px; flex-wrap: wrap }
+.admin-form textarea { resize: vertical }
+.admin-list { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-direction: column; gap: 10px }
+.admin-list li { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 10px; background: var(--bg2) }
+.admin-list .mini-poster { width: 44px; flex: none }
+.admin-list .mini-poster .poster { padding: 0; border-radius: 6px }
+.admin-list .mini-poster .pt, .admin-list .mini-poster .py { display: none }
+.admin-list .mini-poster .glyph { top: 50%; left: 50%; right: auto; transform: translate(-50%, -50%); font-size: 18px }
+.admin-list .t { font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+
 /* auth */
 .auth { max-width: 400px; margin: 8vh auto 0; display: flex; flex-direction: column; gap: 14px }
 .auth label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted) }
@@ -188,10 +213,15 @@ tr:hover td { background: rgba(255,255,255,.015) }
   header.app { padding: 10px 16px; gap: 14px; flex-wrap: wrap }
   nav.main { order: 3; width: 100%; overflow-x: auto }
   main { padding: 20px 16px 80px }
-  .hero, .detail, .search-layout, .lab-grid { grid-template-columns: 1fr }
+  .hero, .detail, .search-layout, .lab-grid, .admin-grid { grid-template-columns: 1fr }
+  .admin-form .two { grid-template-columns: 1fr }
   .hero .art { display: none }
   .detail .poster { max-width: 220px }
   .filters { position: static }
   .kpis { grid-template-columns: repeat(2, 1fr) }
   .facts { grid-template-columns: repeat(2, auto) }
 }
+
+/* chân trang: ghi nguồn TMDB / MovieLens */
+.site-foot { max-width: 1200px; margin: 40px auto 0; padding: 18px 24px 32px; border-top: 1px solid var(--line); color: var(--dim); font-size: 12px; line-height: 1.6 }
+.site-foot a { color: var(--muted); text-decoration: underline }

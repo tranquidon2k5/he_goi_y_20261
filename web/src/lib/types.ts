@@ -79,6 +79,8 @@ export type ModelVersion = {
   deployed_at: number | null;
 };
 
+export type AdminMovies = { total: number; page: number; page_size: number; items: Movie[]; tmdb_enabled: boolean };
+
 export type LabInfo = {
   live: ModelVersion | null;
   versions: ModelVersion[];
@@ -86,4 +88,31 @@ export type LabInfo = {
   stats: { p95_ms: number | null; pending_interactions: number; app_users: number; app_ratings: number; events: number };
   online: { row: string; impressions: number; clicks: number; ctr: number }[];
   offline: ({ version: string; recommender: string } & Record<string, number | string>)[];
+  experiments: Experiments | null;
+};
+
+type MeanStd = [number, number];
+export type ExperimentRow = Record<"ndcg@10" | "recall@10" | "ndcg@20" | "recall@20" | "mrr" | "coverage@10" | "diversity@10" | "novelty@10", MeanStd> & {
+  seeds: number;
+  n_trials: number;
+  best_epoch: number;
+  "val_ndcg@10": number;
+  hp: Record<string, unknown>;
+  by_history_len: Record<string, number>;
+  by_target_popularity: Record<string, number>;
+  "mmr_0.2": Record<string, number>;
+  train_seconds: number;
+};
+export type Experiments = {
+  models: Record<string, ExperimentRow>;
+  labels: Record<string, string>;
+  reference: Record<string, Record<string, number>>;
+  significance?: { vs: string; t: number; p: number; mean_diff: number };
+  ablation_tests?: Record<string, { t: number; p: number }>;
+  cl_controlled?: { t: number; p: number; mean_diff: number };
+  significance_v2?: { vs: string; t: number; p: number; mean_diff: number };
+  rerank?: Record<string, { days: number; w: number; val_base: number; val_rerank: number; seeds: number[];
+    test_base: number; test_rerank: number; test_rerank_std: number; by_history_len: Record<string, number> }>;
+  best_on_val?: string;
+  data: Record<string, unknown> & { users: number; items: number; interactions: number; since_year: number };
 };

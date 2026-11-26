@@ -1,0 +1,18 @@
+{
+  "number": 4,
+  "hp": {
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "maxlen": 100,
+    "batch": 256,
+    "lr": 0.001,
+    "dropout": 0.2,
+    "wd": 0.0,
+    "n_neg": 256
+  },
+  "val_ndcg@10": 0.03029750207003047,
+  "best_epoch": 16,
+  "sec_per_epoch": 9.373283755779266,
+  "kind": "anchor"
+}

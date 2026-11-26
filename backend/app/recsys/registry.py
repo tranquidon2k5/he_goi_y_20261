@@ -2,9 +2,11 @@
 
 from app.recsys.base import Recommender
 from app.recsys.heuristic import HeuristicRecommender
+from app.recsys.seqrec import SeqRecommender
 
 RECOMMENDERS: dict[str, type[Recommender]] = {
     HeuristicRecommender.name: HeuristicRecommender,
+    SeqRecommender.name: SeqRecommender,
 }
 
 DEFAULT_RECOMMENDER = HeuristicRecommender.name

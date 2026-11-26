@@ -3,11 +3,121 @@
 import { useEffect, useState } from "react";
 import { Guard, useToast } from "@/components/providers";
 import { api, useApi } from "@/lib/api";
-import type { LabInfo, ModelVersion } from "@/lib/types";
+import type { Experiments, LabInfo, ModelVersion } from "@/lib/types";
 
 const KIND: Record<string, string> = { refresh: "làm mới thống kê", finetune: "fine-tune", full: "huấn luyện lại toàn bộ" };
 const STATUS: Record<string, string> = { live: "live", pass: "qua cổng", fail: "bị chặn", running: "đang chạy", queued: "chờ chạy", archived: "lưu trữ" };
-const METRIC_COLS = ["ndcg@10", "recall@10", "mrr@10", "ndcg@20", "recall@20", "coverage"];
+const METRIC_COLS: [string, string][] = [["ndcg@10", "NDCG@10 cổng"], ["test_ndcg@10", "NDCG@10 test"], ["test_recall@10", "Recall@10 test"],
+  ["test_mrr", "MRR test"], ["test_coverage@10", "Độ phủ@10"], ["test_diversity@10", "Đa dạng@10"]];
+const EXP_COLS = ["ndcg@10", "recall@10", "ndcg@20", "recall@20", "mrr", "coverage@10", "diversity@10", "novelty@10"] as const;
+const ORDER = ["proposed_v2", "proposed", "esasrec", "gsasrec", "cl4srec", "xsimgcl", "sasrec_ss_content_cl", "sasrec_ss_content", "sasrec_ss", "sasrec"];
+const BUCKET: Record<string, string> = { head: "phim phổ biến (20%)", mid: "giữa (30%)", tail: "đuôi dài (50%)" };
+
+function ExperimentsCard({ e }: { e: Experiments }) {
+  const names = ORDER.filter((n) => e.models[n]);
+  if (!names.length) return null;
+  const best = Object.fromEntries(EXP_COLS.map((c) => [c, Math.max(...names.map((n) => e.models[n][c][0]))]));
+  const sig = e.significance;
+  const f = (x: number, d = 4) => x.toFixed(d);
+  const dg = (c: string) => (c === "novelty@10" ? 2 : 4);
+  return (
+    <div className="card" style={{ marginTop: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+        <h2>Mô hình đề xuất so với baseline · tập test chia theo thời gian</h2>
+        <span className="dim" style={{ marginLeft: "auto", fontSize: 12 }}>
+          ML-32M từ {e.data.since_year} · {e.data.users.toLocaleString("vi")} người dùng · {e.data.items.toLocaleString("vi")} phim ·{" "}
+          {e.data.interactions.toLocaleString("vi")} tương tác dương
+        </span>
+      </div>
+      <div className="tablewrap">
+        <table style={{ marginTop: 12 }}>
+          <thead><tr><th>Mô hình</th>{EXP_COLS.map((c) => <th key={c}>{c}</th>)}<th>Seed</th></tr></thead>
+          <tbody>
+            {names.map((n) => (
+              <tr key={n} className={n === "proposed_v2" ? "hl" : ""}>
+                <td>{e.labels[n] ?? n}</td>
+                {EXP_COLS.map((c) => {
+                  const [m, s] = e.models[n][c];
+                  return <td key={c} className={`mono ${m === best[c] ? "best" : ""}`}>{f(m, dg(c))}<span className="dim"> ±{f(s, dg(c))}</span></td>;
+                })}
+                <td className="muted">{e.models[n].seeds}</td>
+              </tr>
+            ))}
+            {Object.entries(e.reference).map(([n, r]) => (
+              <tr key={n} className="ref">
+                <td className="muted">Tham chiếu: {n}</td>
+                {EXP_COLS.map((c) => <td key={c} className="mono muted">{f(r[c], dg(c))}</td>)}
+                <td className="muted">—</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {e.significance_v2 && (
+        <p style={{ marginTop: 6, fontSize: 13.5 }}>
+          Đề xuất v2 so với gSASRec: chênh lệch NDCG@10{" "}
+          <b className="mono">{e.significance_v2.mean_diff >= 0 ? "+" : ""}{f(e.significance_v2.mean_diff)}</b>, p ={" "}
+          <b className="mono">{e.significance_v2.p < 0.001 ? "< 0.001" : f(e.significance_v2.p, 3)}</b>
+          {e.significance_v2.p < 0.05 ? "" : " — không khác có ý nghĩa thống kê."}
+        </p>
+      )}
+      {e.rerank && (
+        <div className="tablewrap" style={{ marginTop: 12 }}>
+          <h3>Xếp hạng lại theo độ phổ biến gần đây (số ngày, w chọn trên validation)</h3>
+          <table className="mono" style={{ marginTop: 6 }}>
+            <thead><tr><th>Mô hình</th><th>Số ngày</th><th>w</th><th>val trước → sau</th><th>test trước → sau</th><th>Seed</th></tr></thead>
+            <tbody>{names.filter((n) => e.rerank![n]).map((n) => {
+              const r = e.rerank![n];
+              return <tr key={n} className={n === "proposed_v2" ? "hl" : ""}><td>{e.labels[n] ?? n}</td><td>{r.days}</td><td>{r.w}</td>
+                <td>{f(r.val_base)} → {f(r.val_rerank)}</td><td>{f(r.test_base)} → <b>{f(r.test_rerank)}</b></td><td>{r.seeds.length}</td></tr>;
+            })}</tbody>
+          </table>
+        </div>
+      )}
+      {e.cl_controlled && (
+        <p style={{ marginTop: 6, fontSize: 13.5 }}>
+          Ablation có kiểm soát — thêm học tương phản vào đúng cấu hình tốt nhất của ablation 3: chênh lệch NDCG@10{" "}
+          <b className="mono">{e.cl_controlled.mean_diff >= 0 ? "+" : ""}{f(e.cl_controlled.mean_diff)}</b>, p ={" "}
+          <b className="mono">{e.cl_controlled.p < 0.001 ? "< 0.001" : f(e.cl_controlled.p, 3)}</b>.
+        </p>
+      )}
+      {sig && (
+        <p style={{ marginTop: 10, fontSize: 13.5 }}>
+          Kiểm định t cặp đôi theo người dùng (NDCG@10) giữa mô hình đề xuất và baseline mạnh nhất ({e.labels[sig.vs] ?? sig.vs}):{" "}
+          chênh lệch trung bình <b className="mono">{sig.mean_diff >= 0 ? "+" : ""}{f(sig.mean_diff)}</b>, t = {f(sig.t, 2)},{" "}
+          p = <b className="mono">{sig.p < 0.001 ? "< 0.001" : f(sig.p, 3)}</b>
+          {sig.p < 0.05 ? (sig.mean_diff > 0 ? " — tốt hơn có ý nghĩa thống kê." : " — kém hơn có ý nghĩa thống kê.") : " — khác biệt không có ý nghĩa thống kê (p ≥ 0.05)."}
+        </p>
+      )}
+      <div className="exp-grid">
+        <div>
+          <h3>Tách theo độ dài lịch sử (NDCG@10)</h3>
+          <table className="mono" style={{ marginTop: 6 }}>
+            <thead><tr><th>Mô hình</th>{Object.keys(e.models[names[0]].by_history_len).map((b) => <th key={b}>{b}</th>)}</tr></thead>
+            <tbody>{names.map((n) => <tr key={n}><td>{n}</td>{Object.values(e.models[n].by_history_len).map((v, i) => <td key={i}>{f(v)}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
+        <div>
+          <h3>Tách theo độ phổ biến của phim đích (NDCG@10)</h3>
+          <table className="mono" style={{ marginTop: 6 }}>
+            <thead><tr><th>Mô hình</th>{Object.keys(e.models[names[0]].by_target_popularity).map((b) => <th key={b} title={BUCKET[b]}>{b}</th>)}</tr></thead>
+            <tbody>{names.map((n) => <tr key={n}><td>{n}</td>{Object.values(e.models[n].by_target_popularity).map((v, i) => <td key={i}>{f(v)}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
+        <div>
+          <h3>Xếp hạng lại MMR (λ = 0.2)</h3>
+          <table className="mono" style={{ marginTop: 6 }}>
+            <thead><tr><th>Mô hình</th><th>NDCG@10</th><th>Đa dạng@10</th><th>Độ phủ@10</th></tr></thead>
+            <tbody>{names.map((n) => {
+              const r = e.models[n]["mmr_0.2"], b = e.models[n];
+              return <tr key={n}><td>{n}</td><td>{f(b["ndcg@10"][0])} → {f(r["ndcg@10"])}</td><td>{f(b["diversity@10"][0], 3)} → {f(r["diversity@10"], 3)}</td><td>{f(b["coverage@10"][0], 3)} → {f(r["coverage@10"], 3)}</td></tr>;
+            })}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
 const fmtTime = (t: number | null) => (t ? new Date(t * 1000).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" }) : "—");
 const num = (v: unknown) => (typeof v === "number" ? v.toFixed(4) : "—");
 
@@ -51,10 +161,10 @@ function Lab() {
   const live = data.live;
   const prev = data.versions.find((v) => v.status === "pass");
 
-  async function retrain() {
+  async function retrain(kind: "refresh" | "finetune") {
     setBusy(true);
     try {
-      const v = await api<ModelVersion>("/lab/retrain", { method: "POST", json: { kind: "refresh" } });
+      const v = await api<ModelVersion>("/lab/retrain", { method: "POST", json: { kind } });
       toast(`Đã xếp hàng ${v.version} · POST /lab/retrain`);
       reload();
     } catch (e) {
@@ -69,7 +179,7 @@ function Lab() {
     reload();
   }
 
-  const stages = ["Gom sự kiện", "Tính thống kê", "Huấn luyện", "Cổng đánh giá", "Triển khai"];
+  const stages = ["Gom sự kiện", "Tính thống kê", "Fine-tune", "Cổng đánh giá", "Triển khai"];
   const cur = running ? (running.status === "queued" ? 0 : 1) : -1;
 
   return (
@@ -77,7 +187,11 @@ function Lab() {
       <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
         <h1>Lab</h1><span className="tag">Chỉ admin · nhóm phát triển & giảng viên</span>
         <div style={{ marginLeft: "auto", display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button className="btn" disabled={busy || !!running} onClick={retrain}>↻ Chạy học lại ngay</button>
+          <button className="btn" disabled={busy || !!running} onClick={() => retrain("refresh")} title="Tính lại độ phổ biến, nạp lại mô hình">↻ Làm mới thống kê</button>
+          {live?.recommender === "seqrec" && (
+            <button className="btn primary" disabled={busy || !!running} onClick={() => retrain("finetune")}
+              title="Fine-tune từ checkpoint đang chạy với dữ liệu mới + replay, qua cổng đánh giá rồi mới triển khai">⚙ Fine-tune ngay</button>
+          )}
           {prev && <button className="btn danger" onClick={() => rollback(prev.version)}>⟲ Rollback về {prev.version}</button>}
         </div>
       </div>
@@ -91,7 +205,7 @@ function Lab() {
         <div className="card kpi">
           <div className="l">NDCG@10 (cửa sổ giữ riêng)</div>
           <div className="v">{num(live?.metrics["ndcg@10"])}</div>
-          <div className="d dim">{live?.metrics["ndcg@10"] ? "" : "chưa đánh giá — thuật toán chưa chốt"}</div>
+          <div className="d dim">{typeof live?.metrics["ndcg@10"] === "number" ? `${live.metrics["gate_cases"] ?? ""} ca · cửa sổ test MovieLens` : "chưa đánh giá"}</div>
         </div>
         <div className="card kpi">
           <div className="l">Độ trễ API gợi ý p95</div>
@@ -138,23 +252,30 @@ function Lab() {
 
       <div className="card" style={{ marginTop: 16 }}>
         <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-          <h2>So sánh offline trên tập test (chia theo thời gian)</h2>
+          <h2>Metric của các phiên bản mô hình</h2>
           <span className="dim" style={{ marginLeft: "auto", fontSize: 12 }}>đọc từ model_versions.metrics</span>
         </div>
         {data.offline.length ? (
           <div className="tablewrap">
             <table style={{ marginTop: 12 }}>
-              <thead><tr><th>Phiên bản</th><th>Mô hình</th>{METRIC_COLS.map((c) => <th key={c}>{c}</th>)}</tr></thead>
+              <thead><tr><th>Phiên bản</th><th>Mô hình</th>{METRIC_COLS.map(([c, l]) => <th key={c}>{l}</th>)}</tr></thead>
               <tbody>
                 {data.offline.map((r) => (
                   <tr key={r.version}><td className="mono">{r.version}</td><td>{r.recommender}</td>
-                    {METRIC_COLS.map((c) => <td key={c} className="mono">{num(r[c])}</td>)}</tr>
+                    {METRIC_COLS.map(([c]) => <td key={c} className="mono">{num(r[c])}</td>)}</tr>
                 ))}
               </tbody>
             </table>
           </div>
-        ) : <div className="empty" style={{ marginTop: 12, padding: 36 }}>Chưa có kết quả thí nghiệm offline. Bảng sẽ có dữ liệu khi baseline và mô hình đề xuất được huấn luyện (PRD mục 8–9).</div>}
+        ) : <div className="empty" style={{ marginTop: 12, padding: 36 }}>Chưa có phiên bản nào có metric.</div>}
       </div>
+
+      {data.experiments ? <ExperimentsCard e={data.experiments} /> : (
+        <div className="card" style={{ marginTop: 16 }}>
+          <h2>Mô hình đề xuất so với baseline</h2>
+          <div className="empty" style={{ marginTop: 12, padding: 36 }}>Chưa có kết quả thí nghiệm (artifacts/experiments/summary.json do <span className="mono">python -m ml.train report</span> sinh ra).</div>
+        </div>
+      )}
 
       <div className="card" style={{ marginTop: 16 }}>
         <h2>Online · CTR theo hàng gợi ý</h2>

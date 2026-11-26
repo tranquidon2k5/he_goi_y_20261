@@ -43,8 +43,8 @@ function Home() {
         <div className="banner">
           <span aria-hidden>ℹ️</span>
           <span>
-            Bạn mới có <b>{data.n_interactions}</b> tương tác. Chấm thêm <b>{data.threshold - data.n_interactions}</b> phim
-            để nhận gợi ý cá nhân hoá — hiện đang hiển thị phim thịnh hành theo thể loại bạn chọn.
+            Đang gợi ý phim thịnh hành theo thể loại bạn chọn. Nếu muốn gợi ý riêng cho bạn, chấm thêm{" "}
+            <b>{data.threshold - data.n_interactions}</b> phim bạn đã xem (không bắt buộc).
           </span>
           <Link className="btn" style={{ marginLeft: "auto", padding: "6px 12px" }} href="/onboarding">Chấm thêm</Link>
         </div>

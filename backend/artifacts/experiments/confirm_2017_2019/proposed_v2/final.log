@@ -1,0 +1,15 @@
+[05:06:46] === final proposed_v2 seed 0: train+val, 3 epoch
+[05:06:55]   epoch 1 loss 1.7576 (6.9s)
+[05:07:00]   epoch 2 loss 1.7525 (4.8s)
+[05:07:05]   epoch 3 loss 1.7498 (4.9s)
+[05:07:05] test seed 0: ndcg@10 0.0642 recall@10 0.1160 mrr 0.0579
+[05:07:05] === final proposed_v2 seed 1: train+val, 3 epoch
+[05:07:11]   epoch 1 loss 1.7580 (4.9s)
+[05:07:16]   epoch 2 loss 1.7529 (4.9s)
+[05:07:21]   epoch 3 loss 1.7511 (5.0s)
+[05:07:21] test seed 1: ndcg@10 0.0581 recall@10 0.1071 mrr 0.0527
+[05:07:21] === final proposed_v2 seed 2: train+val, 3 epoch
+[05:07:26]   epoch 1 loss 1.7574 (4.9s)
+[05:07:31]   epoch 2 loss 1.7516 (4.9s)
+[05:07:36]   epoch 3 loss 1.7503 (4.9s)
+[05:07:36] test seed 2: ndcg@10 0.0564 recall@10 0.1029 mrr 0.0519
