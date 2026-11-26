@@ -25,6 +25,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Header />
           </Suspense>
           {children}
+          <footer className="site-foot">
+            Poster, mô tả và trailer từ <a href="https://www.themoviedb.org" target="_blank" rel="noreferrer">TMDB</a>.
+            Sản phẩm này dùng TMDB API nhưng không được TMDB xác nhận hay chứng nhận.
+            Dữ liệu đánh giá: <a href="https://grouplens.org/datasets/movielens/" target="_blank" rel="noreferrer">MovieLens</a> (GroupLens).
+          </footer>
         </Providers>
       </body>
     </html>

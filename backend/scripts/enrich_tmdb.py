@@ -48,15 +48,33 @@ async def fetch(client: httpx.AsyncClient, tmdb_id: int) -> dict | None:
     return data
 
 
-async def run(limit: int, concurrency: int) -> None:
+def apply(m: Movie, d: dict) -> None:
+    """Ghi dữ liệu TMDB vào một phim; trường TMDB bỏ trống thì giữ giá trị đang có."""
+    m.overview = d.get("overview") or m.overview or ""
+    m.poster_path = d.get("poster_path") or m.poster_path
+    m.backdrop_path = d.get("backdrop_path") or m.backdrop_path
+    m.runtime = d.get("runtime") or m.runtime
+    m.trailer_key = pick_trailer((d.get("videos") or {}).get("results", [])) or m.trailer_key
+    credits = d.get("credits") or {}
+    m.directors = ", ".join(c["name"] for c in credits.get("crew", []) if c.get("job") == "Director")[:500] or m.directors
+    m.cast = ", ".join(c["name"] for c in credits.get("cast", [])[:8])[:1000] or m.cast
+
+
+def client_args() -> tuple[dict, dict]:
+    """(headers, params) cho httpx: hỗ trợ cả API key v3 và Read Access Token v4."""
     key = get_settings().tmdb_api_key
     if not key:
-        raise SystemExit("Thiếu CINEREC_TMDB_API_KEY")
-    headers, params = {}, {}
+        raise RuntimeError("Thiếu CINEREC_TMDB_API_KEY")
     if key.startswith("eyJ"):  # token v4
-        headers["Authorization"] = f"Bearer {key}"
-    else:
-        params["api_key"] = key
+        return {"Authorization": f"Bearer {key}"}, {}
+    return {}, {"api_key": key}
+
+
+async def run(limit: int, concurrency: int) -> None:
+    try:
+        headers, params = client_args()
+    except RuntimeError as e:
+        raise SystemExit(str(e)) from e
 
     with SessionLocal() as db:
         todo = list(db.execute(select(Movie.id, Movie.tmdb_id)
@@ -82,14 +100,7 @@ async def run(limit: int, concurrency: int) -> None:
             if d is None:
                 m.overview = ""  # đánh dấu đã thử để không gọi lại
                 continue
-            m.overview = d.get("overview") or ""
-            m.poster_path = d.get("poster_path")
-            m.backdrop_path = d.get("backdrop_path")
-            m.runtime = d.get("runtime") or None
-            m.trailer_key = pick_trailer((d.get("videos") or {}).get("results", []))
-            credits = d.get("credits") or {}
-            m.directors = ", ".join(c["name"] for c in credits.get("crew", []) if c.get("job") == "Director")[:500] or None
-            m.cast = ", ".join(c["name"] for c in credits.get("cast", [])[:8])[:1000] or None
+            apply(m, d)
             n += 1
         db.commit()
     print(f"đã cập nhật {n} phim")

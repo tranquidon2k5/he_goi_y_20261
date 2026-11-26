@@ -1,0 +1,4 @@
+[04:48:10] === gsasrec: chọn 30 ngày, w = 1.0 · val 0.0470 -> 0.0529
+[04:48:12] test seed 0: rerank ndcg@10 0.0483
+[04:48:13] test seed 1: rerank ndcg@10 0.0481
+[04:48:15] test seed 2: rerank ndcg@10 0.0499

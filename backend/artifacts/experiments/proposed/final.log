@@ -1,0 +1,36 @@
+[02:54:57] === final proposed seed 0: train+val, 10 epoch
+[02:55:53]   epoch 1 loss 4.1215 (50.9s)
+[02:56:42]   epoch 2 loss 3.7156 (48.9s)
+[02:57:33]   epoch 3 loss 3.5446 (50.3s)
+[02:58:18]   epoch 4 loss 3.4571 (45.4s)
+[02:58:57]   epoch 5 loss 3.3865 (39.3s)
+[02:59:43]   epoch 6 loss 3.3409 (45.9s)
+[03:00:34]   epoch 7 loss 3.3196 (50.8s)
+[03:01:24]   epoch 8 loss 3.2532 (50.5s)
+[03:02:15]   epoch 9 loss 3.2476 (50.8s)
+[03:03:06]   epoch 10 loss 3.2331 (51.0s)
+[03:03:07] test seed 0: ndcg@10 0.0265 recall@10 0.0563 mrr 0.0256
+[03:03:07] === final proposed seed 1: train+val, 10 epoch
+[03:04:00]   epoch 1 loss 4.2353 (51.0s)
+[03:04:51]   epoch 2 loss 3.7079 (51.0s)
+[03:05:42]   epoch 3 loss 3.5259 (51.0s)
+[03:06:33]   epoch 4 loss 3.4370 (51.0s)
+[03:07:23]   epoch 5 loss 3.3882 (50.1s)
+[03:08:13]   epoch 6 loss 3.3475 (50.5s)
+[03:09:03]   epoch 7 loss 3.3055 (49.9s)
+[03:09:54]   epoch 8 loss 3.3193 (51.0s)
+[03:10:46]   epoch 9 loss 3.2457 (52.0s)
+[03:11:38]   epoch 10 loss 3.2447 (51.8s)
+[03:11:39] test seed 1: ndcg@10 0.0222 recall@10 0.0435 mrr 0.0229
+[03:11:39] === final proposed seed 2: train+val, 10 epoch
+[03:12:34]   epoch 1 loss 4.1384 (53.0s)
+[03:13:27]   epoch 2 loss 3.6613 (53.0s)
+[03:14:20]   epoch 3 loss 3.5160 (52.8s)
+[03:15:13]   epoch 4 loss 3.4052 (53.1s)
+[03:15:57]   epoch 5 loss 3.3898 (44.4s)
+[03:16:49]   epoch 6 loss 3.3074 (51.2s)
+[03:17:39]   epoch 7 loss 3.2967 (51.0s)
+[03:18:30]   epoch 8 loss 3.2835 (51.0s)
+[03:19:21]   epoch 9 loss 3.2276 (50.9s)
+[03:20:12]   epoch 10 loss 3.2306 (50.8s)
+[03:20:13] test seed 2: ndcg@10 0.0229 recall@10 0.0465 mrr 0.0237

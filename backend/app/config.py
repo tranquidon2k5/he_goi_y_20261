@@ -14,6 +14,8 @@ class Settings(BaseSettings):
 
     # PRD mục 4: userId của app bắt đầu từ 1.000.001 để không trùng MovieLens
     app_user_id_start: int = 1_000_001
+    # Phim do quản trị thêm nhận movieId từ 10.000.001 để không trùng movieId của MovieLens
+    app_movie_id_start: int = 10_000_001
     # PRD mục 3: dưới ngưỡng này dùng "Thịnh hành" theo thể loại (switching hybrid)
     cold_start_threshold: int = 5
     positive_rating: float = 4.0

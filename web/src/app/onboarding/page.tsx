@@ -69,6 +69,15 @@ function Onboarding() {
     router.replace("/");
   }
 
+  // Bỏ qua bước chấm phim: chỉ lưu thể loại, trang chủ gợi ý "Thịnh hành" theo các thể loại này (cold-start)
+  async function skipRating() {
+    setBusy(true);
+    await api("/me", { method: "PATCH", json: { genres: [...genres], onboarded: true } });
+    await refresh();
+    toast("Xong! Gợi ý theo thể loại bạn chọn — chấm vài phim bất cứ lúc nào để gợi ý sát hơn");
+    router.replace("/");
+  }
+
   const n = ratings.size;
   return (
     <main>
@@ -87,14 +96,18 @@ function Onboarding() {
                 </button>
               ))}
             </div>
-            <button className="btn primary" disabled={genres.size < MIN_GENRES || busy} onClick={toStep2}>Tiếp tục →</button>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <button className="btn primary" disabled={genres.size < MIN_GENRES || busy} onClick={skipRating}>Xem gợi ý theo thể loại</button>
+              <button className="btn" disabled={genres.size < MIN_GENRES || busy} onClick={toStep2}>Chấm vài phim để gợi ý sát hơn →</button>
+            </div>
           </div>
         ) : (
           <div>
-            <div className="muted" style={{ fontSize: 13 }}>Bước 2 / 2</div>
+            <div className="muted" style={{ fontSize: 13 }}>Bước 2 / 2 · không bắt buộc</div>
             <h1 style={{ marginTop: 4 }}>Chấm vài phim bạn đã xem</h1>
             <p className="muted" style={{ marginTop: 6 }}>
-              Chấm tối thiểu {MIN_RATINGS} phim (0,5–5 sao). Chưa xem thì bỏ qua. Càng chấm nhiều, gợi ý càng sát.
+              Chấm phim bạn đã xem (0,5–5 sao), chưa xem thì bỏ qua. Từ {MIN_RATINGS} phim trở lên sẽ có hàng “Dành cho bạn”;
+              ít hơn thì gợi ý dựa trên thể loại bạn chọn.
             </p>
             <div className="rate-grid">
               {pool.map(({ movie }) => {
@@ -112,11 +125,11 @@ function Onboarding() {
             <div className="ob-foot">
               <div className="counter">Đã chấm <em>{n}</em> / {MIN_RATINGS}</div>
               <div className="muted" style={{ fontSize: 13 }}>
-                {n >= MIN_RATINGS ? "Đủ rồi! Bạn có thể chấm thêm hoặc tiếp tục." : `Còn ${MIN_RATINGS - n} phim nữa để mở “Dành cho bạn”`}
+                {n >= MIN_RATINGS ? "Đủ để mở “Dành cho bạn”." : `Chấm thêm ${MIN_RATINGS - n} phim để mở “Dành cho bạn”, hoặc xem gợi ý theo thể loại ngay`}
               </div>
               <button className="btn ghost" style={{ marginLeft: "auto" }} onClick={() => setStep(1)}>← Thể loại</button>
               <button className="btn ghost" onClick={() => loadMore(pool.length)}>Hiện phim khác</button>
-              <button className="btn primary" disabled={n < MIN_RATINGS || busy} onClick={finish}>Xem gợi ý của tôi</button>
+              <button className="btn primary" disabled={busy} onClick={finish}>{n ? "Xem gợi ý của tôi" : "Bỏ qua, xem gợi ý"}</button>
             </div>
           </div>
         )}

@@ -68,7 +68,7 @@ export function Guard({ children, admin = false }: { children: React.ReactNode; 
   return <>{children}</>;
 }
 
-/** Bảo vệ route: chưa đăng nhập → /login; chưa onboarding → /onboarding; Lab chỉ admin. */
+/** Bảo vệ route: chưa đăng nhập → /login; chưa onboarding → /onboarding; Lab và Quản trị chỉ admin. */
 function RouteGuard() {
   const { user, ready } = useAuth();
   const router = useRouter();
@@ -79,7 +79,7 @@ function RouteGuard() {
     if (!user && !isPublic) router.replace(`/login?next=${encodeURIComponent(path)}`);
     else if (user && isPublic) router.replace(user.onboarded ? "/" : "/onboarding");
     else if (user && !user.onboarded && path !== "/onboarding") router.replace("/onboarding");
-    else if (user && path.startsWith("/lab") && !user.is_admin) router.replace("/");
+    else if (user && (path.startsWith("/lab") || path.startsWith("/admin")) && !user.is_admin) router.replace("/");
   }, [ready, user, path, router]);
   return null;
 }

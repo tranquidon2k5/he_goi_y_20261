@@ -1,0 +1,15 @@
+[03:39:24] === final gsasrec seed 0: train+val, 3 epoch
+[03:39:33]   epoch 1 loss 21.4539 (8.0s)
+[03:39:41]   epoch 2 loss 20.3774 (8.2s)
+[03:39:49]   epoch 3 loss 19.6043 (8.0s)
+[03:39:50] test seed 0: ndcg@10 0.0004 recall@10 0.0011 mrr 0.0011
+[03:39:50] === final gsasrec seed 1: train+val, 3 epoch
+[03:39:58]   epoch 1 loss 21.4777 (7.2s)
+[03:40:06]   epoch 2 loss 20.3294 (7.9s)
+[03:40:14]   epoch 3 loss 19.3818 (7.9s)
+[03:40:14] test seed 1: ndcg@10 0.0021 recall@10 0.0053 mrr 0.0029
+[03:40:14] === final gsasrec seed 2: train+val, 3 epoch
+[03:40:22]   epoch 1 loss 21.3779 (7.9s)
+[03:40:30]   epoch 2 loss 20.4995 (7.9s)
+[03:40:38]   epoch 3 loss 19.3810 (8.1s)
+[03:40:39] test seed 2: ndcg@10 0.0009 recall@10 0.0019 mrr 0.0016

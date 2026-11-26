@@ -20,7 +20,7 @@ export function Header() {
     { href: "/", label: "Trang chủ" },
     { href: "/search", label: "Khám phá" },
     { href: "/profile", label: "Danh sách của tôi" },
-    ...(user.is_admin ? [{ href: "/lab", label: "Lab" }] : []),
+    ...(user.is_admin ? [{ href: "/admin", label: "Quản trị" }, { href: "/lab", label: "Lab" }] : []),
   ];
   const on = (h: string) => (h === "/" ? path === "/" : path.startsWith(h));
 
